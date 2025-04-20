@@ -19,6 +19,7 @@ from rich.table import Table
 from rich import box
 from mcp.server.fastmcp import FastMCP
 from mcp.types import TextContent
+from Pydantic_models import *
 
 # Configure file logging
 debug_mode = os.environ.get("SPA_DEBUG", "0") == "1"
@@ -42,10 +43,10 @@ console = Console()
 mcp = FastMCP("SmartPurchaseAdvisor")
 
 @mcp.tool()
-def classify_product(title: str) -> TextContent:
+def classify_product(input: ClassifyProductInput) -> ClassifyProductOutput:
     """Classify product category based on title using semantic similarity"""
     console.print("[blue]FUNCTION CALL:[/blue] classify_product()")
-    console.print(f"[blue]Product Title:[/blue] {title}")
+    console.print(f"[blue]Product Title:[/blue] {input.title}")
     
     # Define categories with representative examples
     categories = {
@@ -62,7 +63,7 @@ def classify_product(title: str) -> TextContent:
     model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
     
     # Encode the product title
-    title_embedding = model.encode(title.lower())
+    title_embedding = model.encode(input.title.lower())
     
     # Encode category descriptions and calculate similarities
     similarities = {}
@@ -78,27 +79,27 @@ def classify_product(title: str) -> TextContent:
     # Set a threshold for unknown categories
     if confidence < 0.4:
         console.print(f"[yellow]Low confidence ({confidence:.2f}), defaulting to 'other'[/yellow]")
-        return TextContent(type="text", text="other")
+        return ClassifyProductOutput(category="other")
     
     console.print(f"[green]Detected Category:[/green] {best_category[0]} [cyan](confidence: {confidence:.2f})[/cyan]")
-    return TextContent(type="text", text=best_category[0])
+    return ClassifyProductOutput(category=best_category[0])
 
 
 @mcp.tool()
-async def review_summary_tool(product: str, site: str = None, reviews: list = None, num_reviews: int = 100000) -> TextContent:
+def review_summary_tool(input: ReviewSummaryInput) -> ReviewSummaryOutput:
     """Summarize reviews using sentiment analysis"""
     console.print("[blue]FUNCTION CALL:[/blue] review_summary_tool()")
-    console.print(f"[blue]Product:[/blue] {product} | [blue]Site:[/blue] {site} | [blue]Reviews received:[/blue] {len(reviews) if reviews else 0}")
+    console.print(f"[blue]Product:[/blue] {input.product} | [blue]Site:[/blue] {input.site} | [blue]Reviews received:[/blue] {len(input.reviews) if input.reviews else 0}")
     
     try:
         # Process actual reviews if provided
-        if reviews and len(reviews) > 0:
+        if input.reviews and len(input.reviews) > 0:
             # Remove detailed review logging
-            # console.print(f"Processing {len(reviews)} actual reviews from {site}")
+            # console.print(f"Processing {len(input.reviews)} actual reviews from {input.site}")
             
             # Calculate sentiment for each review using TextBlob
             sentiments = []
-            for review_text in reviews:
+            for review_text in input.reviews:
                 blob = TextBlob(review_text)
                 # TextBlob sentiment is between -1 (negative) and 1 (positive)
                 sentiment_value = blob.sentiment.polarity
@@ -112,7 +113,7 @@ async def review_summary_tool(product: str, site: str = None, reviews: list = No
             pros = []
             cons = []
             
-            for i, review in enumerate(reviews):
+            for i, review in enumerate(input.reviews):
                 if sentiments[i] > 0.3:
                     # This is a positive review
                     blob = TextBlob(review)
@@ -132,36 +133,33 @@ async def review_summary_tool(product: str, site: str = None, reviews: list = No
             
             # Construct the response
             result = {
-                "reviews": reviews,
+                "reviews": input.reviews,
                 "overall_sentiment": sentiment_label,
                 "sentiment_score": round(avg_sentiment, 2),
                 "sentiments": sentiments,
                 "pros": pros,
                 "cons": cons,
-                "review_count": len(reviews),
-                "source": site or "multiple sources"
+                "review_count": len(input.reviews),
+                "source": input.site or "multiple sources"
             }
             
         else:
             # No reviews provided
             console.print("[red]No reviews provided to analyze[/red]")
-            return TextContent(
-                type="text",
-                text=json.dumps({
-                    "reviews": [],
-                    "error": "No reviews found for this product",
-                    "overall_sentiment": "Unknown",
-                    "sentiment_score": 0,
-                    "sentiments": [],
-                    "pros": [],
-                    "cons": [],
-                    "review_count": 0,
-                    "source": site or "unknown"
-                })
+            return ReviewSummaryOutput(
+                reviews=[],
+                error="No reviews found for this product",
+                overall_sentiment="Unknown",
+                sentiment_score=0,
+                sentiments=[],
+                pros=[],
+                cons=[],
+                review_count=0,
+                source=input.site or "unknown"
             )
         
         # Remove detailed review printout
-        console.print(f"[green]Review Summary for {product}:[/green] {result['overall_sentiment']} ({result['sentiment_score']}), {len(pros)} pros, {len(cons)} cons")
+        console.print(f"[green]Review Summary for {input.product}:[/green] {result['overall_sentiment']} ({result['sentiment_score']}), {len(pros)} pros, {len(cons)} cons")
         
         # Remove printing individual pros and cons
         # console.print(f"[cyan]Overall Sentiment:[/cyan] {result['overall_sentiment']} ({result['sentiment_score']})")
@@ -172,42 +170,65 @@ async def review_summary_tool(product: str, site: str = None, reviews: list = No
         # for con in result["cons"]:
         #     console.print(f"- {con}")
         
-        return TextContent(
-            type="text",
-            text=json.dumps(result)
+        return ReviewSummaryOutput(
+            reviews=input.reviews,
+            overall_sentiment=result['overall_sentiment'],
+            sentiment_score=result['sentiment_score'],
+            sentiments=result['sentiments'],
+            pros=result['pros'],
+            cons=result['cons'],
+            review_count=result['review_count'],
+            source=result['source']
         )
     except Exception as e:
         error_msg = f"Error in review summary: {str(e)}"
         console.print(f"[red]{error_msg}[/red]")
-        return TextContent(
-            type="text",
-            text=json.dumps({"error": error_msg})
+        return ReviewSummaryOutput(
+            reviews=[],
+            error=error_msg,
+            overall_sentiment="Unknown",
+            sentiment_score=0,
+            sentiments=[],
+            pros=[],
+            cons=[],
+            review_count=0,
+            source=input.site or "unknown"
         )
 
 @mcp.tool()
-def self_check_tool_results(tools_results: dict) -> TextContent:
+def self_check_tool_results(input: ToolsResultsInput) -> SelfCheckOutput:
     """Self-check sentinel reliability and highlight potential issues in review analysis"""
     console.print("[blue]FUNCTION CALL:[/blue] self_check_tool_results()")
-    logger.debug(f"Received tools_results: {tools_results}")
+    logger.debug(f"Received tools_results: {input.tools_results}")
     
     try:
         # Check if tools_results is empty
-        if not tools_results:
+        if not input.tools_results:
             logger.error("Empty tools_results provided")
-            return TextContent(
-                type="text",
-                text="Error: Empty tools_results provided"
+            return SelfCheckOutput(
+                reliability_score=0,
+                reliability_level="Low",
+                review_count=0,
+                sentiment_score=0,
+                issues=["Empty tools_results provided"],
+                warnings=[],
+                insights=[]
             )
         
         # Check if it's a dictionary
-        if not isinstance(tools_results, dict):
-            logger.error(f"Invalid tools_results format: {type(tools_results)}, expected dict")
-            return TextContent(
-                type="text",
-                text=f"Error: Invalid tools_results format: {type(tools_results)}, expected dict"
+        if not isinstance(input.tools_results, dict):
+            logger.error(f"Invalid tools_results format: {type(input.tools_results)}, expected dict")
+            return SelfCheckOutput(
+                reliability_score=0,
+                reliability_level="Low",
+                review_count=0,
+                sentiment_score=0,
+                issues=[f"Invalid tools_results format: {type(input.tools_results)}, expected dict"],
+                warnings=[],
+                insights=[]
             )
         
-        console.print(f"Received tools_results with keys: {list(tools_results.keys())}")
+        console.print(f"Received tools_results with keys: {list(input.tools_results.keys())}")
         
         # Initialize collection for issues, warnings, and insights
         issues = []
@@ -215,7 +236,7 @@ def self_check_tool_results(tools_results: dict) -> TextContent:
         insights = []
         
         # Extract data from review_summary_tool
-        review_data = tools_results.get('review_summary_tool', {})
+        review_data = input.tools_results.get('review_summary_tool', {})
         review_count = review_data.get('review_count', 0)
         sentiment_score = review_data.get('sentiment_score')
         overall_sentiment = review_data.get('overall_sentiment')
@@ -225,7 +246,7 @@ def self_check_tool_results(tools_results: dict) -> TextContent:
         cons_count = len(cons)
         
         # Extract data from calculate_confidence_score
-        confidence_data = tools_results.get('calculate_confidence_score', {})
+        confidence_data = input.tools_results.get('calculate_confidence_score', {})
         confidence_score = confidence_data.get('confidence_score')
         confidence_level = confidence_data.get('confidence_level', '')
         confidence_components = confidence_data.get('components', {})
@@ -331,30 +352,32 @@ def self_check_tool_results(tools_results: dict) -> TextContent:
             border_style="green" if reliability_score > 80 else "yellow" if reliability_score > 60 else "red"
         ))
         
-        return TextContent(
-            type="text",
-            text=json.dumps({
-                "reliability_score": reliability_score,
-                "reliability_level": reliability_level,
-                "review_count": review_count,
-                "sentiment_score": sentiment_score,
-                "issues": issues,
-                "warnings": warnings,
-                "insights": insights
-            })
+        return SelfCheckOutput(
+            reliability_score=reliability_score,
+            reliability_level=reliability_level,
+            review_count=review_count,
+            sentiment_score=sentiment_score,
+            issues=issues,
+            warnings=warnings,
+            insights=insights
         )
     except Exception as e:
         console.print(f"[red]Error in self-check: {str(e)}[/red]")
         traceback.print_exc()
-        return TextContent(
-            type="text",
-            text=json.dumps({"error": str(e)})
+        return SelfCheckOutput(
+            reliability_score=0,
+            reliability_level="Low",
+            review_count=0,
+            sentiment_score=0,
+            issues=[f"Error in self-check: {str(e)}"],
+            warnings=[],
+            insights=[]
         )
 
 # Adding tools from cot_tools.py
 
 @mcp.tool()
-def show_reasoning(product_data: dict) -> TextContent:
+def show_reasoning(input: ProductData) -> ReasoningOutput:
     """
     Provides detailed explanation of sentiment analysis and confidence score calculation
     for a given product based on review data.
@@ -363,22 +386,28 @@ def show_reasoning(product_data: dict) -> TextContent:
     
     try:
         # Check if product_data contains necessary information
-        if not product_data:
-            return TextContent(
-                type="text",
-                text=json.dumps({"error": "No product data provided"})
+        if not input.product_data:
+            return ReasoningOutput(
+                product_name="Unknown Product",
+                review_count=0,
+                sentiment={"score": 0, "label": "Unknown", "explanation": "No sentiment data available"},
+                confidence={"score": 0, "label": "Unknown", "explanation": "No confidence data available"},
+                reliability={"score": 0, "level": "Unknown"},
+                pros_count=0,
+                cons_count=0,
+                recommendation="Insufficient data for recommendation"
             )
         
         # Extract key data points
-        product_name = product_data.get("product_name", "Unknown Product")
-        review_count = product_data.get("review_count", 0)
-        avg_sentiment = product_data.get("sentiment_score", None)
-        confidence_score = product_data.get("confidence_score", None)
-        reliability_score = product_data.get("reliability_score", None)
-        reliability_level = product_data.get("reliability_level", "Unknown")
-        reviews = product_data.get("reviews", [])
-        pros = product_data.get("pros", [])
-        cons = product_data.get("cons", [])
+        product_name = input.product_data.get("product_name", "Unknown Product")
+        review_count = input.product_data.get("review_count", 0)
+        avg_sentiment = input.product_data.get("sentiment_score", None)
+        confidence_score = input.product_data.get("confidence_score", None)
+        reliability_score = input.product_data.get("reliability_score", None)
+        reliability_level = input.product_data.get("reliability_level", "Unknown")
+        reviews = input.product_data.get("reviews", [])
+        pros = input.product_data.get("pros", [])
+        cons = input.product_data.get("cons", [])
         
         # Create the reasoning table but don't print details
         reasoning_table = Table(title=f"Analysis Explanation for {product_name}")
@@ -439,103 +468,96 @@ def show_reasoning(product_data: dict) -> TextContent:
         # Print a concise summary instead of the full reasoning table
         console.print(f"[cyan]Analysis for {product_name}:[/cyan] {review_count} reviews, Sentiment: {avg_sentiment:.2f}, Confidence: {confidence_score:.0f}/100")
         
-        # Create a JSON structure to return instead of the rich table
-        result = {
-            "product_name": product_name,
-            "review_count": review_count,
-            "sentiment": {
-                "score": avg_sentiment,
-                "label": "Positive" if avg_sentiment > 0.2 else "Negative" if avg_sentiment < -0.2 else "Neutral",
-                "explanation": sentiment_explanation if avg_sentiment is not None else "No sentiment data available"
+        # Return the data in the correct format
+        return ReasoningOutput(
+            product_name=product_name,
+            review_count=review_count,
+            sentiment={
+                "score": avg_sentiment if avg_sentiment is not None else 0,
+                "label": "Positive" if avg_sentiment and avg_sentiment > 0.2 else "Negative" if avg_sentiment and avg_sentiment < -0.2 else "Neutral",
+                "explanation": sentiment_explanation
             },
-            "confidence": {
-                "score": confidence_score,
-                "label": "High" if confidence_score >= 70 else "Medium" if confidence_score >= 40 else "Low",
-                "explanation": confidence_explanation if confidence_score is not None else "No confidence data available"
+            confidence={
+                "score": confidence_score if confidence_score is not None else 0,
+                "label": "High" if confidence_score and confidence_score >= 70 else "Medium" if confidence_score and confidence_score >= 40 else "Low",
+                "explanation": confidence_explanation
             },
-            "reliability": {
-                "score": reliability_score,
+            reliability={
+                "score": reliability_score if reliability_score is not None else 0,
                 "level": reliability_level
             },
-            "pros_count": len(pros),
-            "cons_count": len(cons),
-            "recommendation": final_summary if avg_sentiment is not None and confidence_score is not None else "Insufficient data for recommendation"
-        }
-        
-        # Return the JSON data
-        return TextContent(
-            type="text",
-            text=json.dumps(result)
+            pros_count=len(pros),
+            cons_count=len(cons),
+            recommendation=final_summary
         )
     except Exception as e:
         error_msg = f"Error in reasoning explanation: {str(e)}"
         console.print(f"[red]{error_msg}[/red]")
         traceback.print_exc()
-        return TextContent(
-            type="text",
-            text=json.dumps({"error": str(e)})
+        return ReasoningOutput(
+            product_name="Error",
+            review_count=0,
+            sentiment={"score": 0, "label": "Error", "explanation": error_msg},
+            confidence={"score": 0, "label": "Error", "explanation": error_msg},
+            reliability={"score": 0, "level": "Error"},
+            pros_count=0,
+            cons_count=0,
+            recommendation=f"Error: {error_msg}"
         )
 
 @mcp.tool()
-def calculate(expression: str) -> TextContent:
+def calculate(input: CalculateInput) -> CalculateOutput:
     """Calculate sentiment metrics or confidence score components"""
     console.print("[blue]FUNCTION CALL:[/blue] calculate()")
-    console.print(f"[blue]Expression:[/blue] {expression}")
+    console.print(f"[blue]Expression:[/blue] {input.expression}")
     try:
-        result = eval(expression)
+        result = eval(input.expression)
         console.print(f"[green]Result:[/green] {result}")
-        return TextContent(
-            type="text",
-            text=str(result)
-        )
+        return CalculateOutput(result=str(result))
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        return TextContent(
-            type="text",
-            text=f"Error: {str(e)}"
-        )
+        return CalculateOutput(result=f"Error: {str(e)}")
 
 @mcp.tool()
-def verify(expression: str, expected: float) -> TextContent:
+def verify(input: VerifyInput) -> VerifyOutput:
     """Verify sentiment metrics or confidence score calculations"""
     console.print("[blue]FUNCTION CALL:[/blue] verify()")
-    console.print(f"[blue]Verifying:[/blue] {expression} = {expected}")
+    console.print(f"[blue]Verifying:[/blue] {input.expression} = {input.expected}")
     try:
-        actual = float(eval(expression))
-        is_correct = abs(actual - float(expected)) < 1e-10
+        actual = float(eval(input.expression))
+        is_correct = abs(actual - float(input.expected)) < 1e-10
         
         if is_correct:
-            console.print(f"[green]✓ Correct! {expression} = {expected}[/green]")
+            console.print(f"[green]✓ Correct! {input.expression} = {input.expected}[/green]")
         else:
-            console.print(f"[red]✗ Incorrect! {expression} should be {actual}, got {expected}[/red]")
+            console.print(f"[red]✗ Incorrect! {input.expression} should be {actual}, got {input.expected}[/red]")
             
-        return TextContent(
-            type="text",
-            text=str(is_correct)
-        )
+        return VerifyOutput(result=str(is_correct))
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
-        return TextContent(
-            type="text",
-            text=f"Error: {str(e)}"
-        )
+        return VerifyOutput(result=f"Error: {str(e)}")
 
 @mcp.tool()
-def review_consistency_check(reviews_data: dict) -> TextContent:
+def review_consistency_check(input: ReviewsData) -> ConsistencyCheckOutput:
     """Check consistency of review sentiments and identify potential biases"""
     console.print("[blue]FUNCTION CALL:[/blue] review_consistency_check()")
     
     try:
         # Extract review data
-        all_reviews = reviews_data.get("reviews", [])
-        sentiments = reviews_data.get("sentiments", [])
+        all_reviews = input.reviews_data.get("reviews", [])
+        sentiments = input.reviews_data.get("sentiments", [])
         
         if not all_reviews or not sentiments or len(all_reviews) != len(sentiments):
-            return TextContent(
-                type="text",
-                text=json.dumps({
-                    "error": "Invalid review data provided for consistency check"
-                })
+            return ConsistencyCheckOutput(
+                review_count=0,
+                avg_sentiment=0,
+                std_deviation=0,
+                positive_ratio=0,
+                negative_ratio=0,
+                neutral_ratio=0,
+                bias_level="Unknown",
+                consistency_level="Unknown",
+                insights=["Invalid review data provided for consistency check"]
             )
         
         # Create a table for analysis, but don't print it directly
@@ -635,40 +657,44 @@ def review_consistency_check(reviews_data: dict) -> TextContent:
         #         border_style="blue"
         #     ))
         
-        return TextContent(
-            type="text",
-            text=json.dumps({
-                "review_count": num_reviews,
-                "avg_sentiment": round(avg_sentiment, 2),
-                "std_deviation": round(std_deviation, 2),
-                "positive_ratio": round(positive_ratio, 2),
-                "negative_ratio": round(negative_ratio, 2),
-                "neutral_ratio": round(neutral_ratio, 2),
-                "bias_level": bias_level,
-                "consistency_level": consistency_level,
-                "insights": insights
-            })
+        return ConsistencyCheckOutput(
+            review_count=num_reviews,
+            avg_sentiment=round(avg_sentiment, 2),
+            std_deviation=round(std_deviation, 2),
+            positive_ratio=round(positive_ratio, 2),
+            negative_ratio=round(negative_ratio, 2),
+            neutral_ratio=round(neutral_ratio, 2),
+            bias_level=bias_level,
+            consistency_level=consistency_level,
+            insights=insights
         )
     except Exception as e:
         console.print(f"[red]Error in review consistency check: {str(e)}[/red]")
-        return TextContent(
-            type="text",
-            text=json.dumps({"error": str(e)})
+        return ConsistencyCheckOutput(
+            review_count=0,
+            avg_sentiment=0,
+            std_deviation=0,
+            positive_ratio=0,
+            negative_ratio=0,
+            neutral_ratio=0,
+            bias_level="Error",
+            consistency_level="Error",
+            insights=[f"Error in review consistency check: {str(e)}"]
         )
 
 @mcp.tool()
-def calculate_confidence_score(sentiment_data: dict) -> TextContent:
+def calculate_confidence_score(input: ConfidenceScoreComponents) -> ConfidenceScoreOutput:
     """Calculate a confidence score based on sentiment analysis of reviews"""
     console.print("[blue]FUNCTION CALL:[/blue] calculate_confidence_score()")
     # Only print the count of pros and cons, not their contents
-    console.print(f"[blue]Sentiment Data:[/blue] score: {sentiment_data.get('sentiment_score', 0)}, reviews: {sentiment_data.get('review_count', 0)}, pros: {len(sentiment_data.get('pros', []))}, cons: {len(sentiment_data.get('cons', []))}")
+    console.print(f"[blue]Sentiment Data:[/blue] score: {input.sentiment_data.get('sentiment_score', 0)}, reviews: {input.sentiment_data.get('review_count', 0)}, pros: {len(input.sentiment_data.get('pros', []))}, cons: {len(input.sentiment_data.get('cons', []))}")
     
     try:
         # Extract key metrics from sentiment data
-        sentiment_score = float(sentiment_data.get("sentiment_score", 0))
-        review_count = int(sentiment_data.get("review_count", 0))
-        pros = sentiment_data.get("pros", [])
-        cons = sentiment_data.get("cons", [])
+        sentiment_score = float(input.sentiment_data.get("sentiment_score", 0))
+        review_count = int(input.sentiment_data.get("review_count", 0))
+        pros = input.sentiment_data.get("pros", [])
+        cons = input.sentiment_data.get("cons", [])
         
         # Base score from sentiment (convert -1 to 1 scale to 0-100)
         base_score = (sentiment_score + 1) * 50
@@ -761,26 +787,30 @@ def calculate_confidence_score(sentiment_data: dict) -> TextContent:
         # console.print(f"[green]Explanation:[/green] {explanation}")
         # console.print(f"[green]Confidence Level:[/green] {confidence_level}")
         
-        return TextContent(
-            type="text",
-            text=json.dumps({
-                "confidence_score": confidence_score,
-                "explanation": explanation,
-                "confidence_level": confidence_level,
-                "components": {
-                    "sentiment_component": round(0.5 * base_score, 1),
-                    "review_count_component": round(0.3 * (review_factor * 100), 1),
-                    "specificity_component": round(0.1 * (specificity_score * 100), 1),
-                    "balance_component": round(0.1 * (balance_factor * 100), 1)
-                }
-            })
+        return ConfidenceScoreOutput(
+            confidence_score=confidence_score,
+            explanation=explanation,
+            confidence_level=confidence_level,
+            components={
+                "sentiment_component": round(0.5 * base_score, 1),
+                "review_count_component": round(0.3 * (review_factor * 100), 1),
+                "specificity_component": round(0.1 * (specificity_score * 100), 1),
+                "balance_component": round(0.1 * (balance_factor * 100), 1)
+            }
         )
     except Exception as e:
         error_msg = f"Error calculating confidence score: {str(e)}"
         console.print(f"[red]{error_msg}[/red]")
-        return TextContent(
-            type="text",
-            text=json.dumps({"error": error_msg})
+        return ConfidenceScoreOutput(
+            confidence_score=0,
+            explanation=error_msg,
+            confidence_level=f"Error: {error_msg}",
+            components={
+                "sentiment_component": 0,
+                "review_count_component": 0,
+                "specificity_component": 0,
+                "balance_component": 0
+            }
         )
 
 if __name__ == "__main__":
