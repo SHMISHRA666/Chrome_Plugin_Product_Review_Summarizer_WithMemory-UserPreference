@@ -13,6 +13,16 @@ This project implements a multi-layer cognitive architecture for intelligent pro
 - **Intelligent Decision Making**: Provides personalized purchase recommendations
 - **Chrome Extension**: Browser integration for seamless shopping assistance
 - **Real-time Processing**: Asynchronous processing of reviews and recommendations
+- **User Preferences**: Save and apply your shopping preferences for more personalized analysis
+- **Memory System**: The system remembers previously analyzed products and can reuse analyses
+
+## Recent Updates
+
+- **User Preferences UI**: Added intuitive interface for setting and saving shopping preferences
+- **Memory Integration**: System now detects when you've previously analyzed a product
+- **Streamlined Memory UI**: Cleaner, more intuitive interface when working with previously analyzed products
+- **Server Configuration**: Added ability to easily change server URL from the extension
+- **Improved Error Handling**: Better error messages and recovery options
 
 ## Architecture
 
@@ -33,8 +43,8 @@ The system is built on a layered cognitive architecture:
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
-cd smart-purchase-advisor
+git clone https://github.com/SHMISHRA666/Chrome_Plugin_Product_Review_Summarizer_WithMemory-UserPreference.git
+cd Chrome_Plugin_Product_Review_Summarizer_WithMemory-UserPreference
 ```
 
 2. Create and activate a virtual environment:
@@ -64,6 +74,25 @@ python Product_Review_Summariser_main.py
 2. Install the Chrome extension from the `chrome_extension` directory
 
 3. The system will now provide purchase recommendations as you browse products online
+
+4. Access your preferences through the settings icon in the extension
+
+5. When revisiting previously analyzed products, you'll be given the option to use existing analysis or perform a new one
+
+### Using User Preferences
+
+1. Click the settings icon in the extension
+2. Set your price range, brand preferences, and feature priorities
+3. Set review and confidence thresholds
+4. Save your preferences
+5. Analyses will now consider your preferences when evaluating products
+
+### Using Memory Features
+
+The system automatically detects when you've previously analyzed a product and will:
+1. Ask if you want to use the existing analysis or perform a new one
+2. If using existing analysis, results will load instantly
+3. If performing a new analysis, your preferences will be applied to the new analysis
 
 ## Project Structure
 
