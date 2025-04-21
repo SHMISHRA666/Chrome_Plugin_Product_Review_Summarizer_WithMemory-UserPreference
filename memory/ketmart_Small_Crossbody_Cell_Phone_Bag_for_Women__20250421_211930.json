@@ -1,0 +1,72 @@
+{
+  "product_data": {
+    "title": "ketmart Small Crossbody Cell Phone Bag for Women, Mini Over Shoulder Handbag Purse with Womens Crossbody Cell Phone Purse Holder Wallet.",
+    "site": "amazon.in",
+    "price": "\u20b9469",
+    "url": "https://www.amazon.in/gp/product/B0CTMDW218/ref=ewc_pr_img_7?smid=A2HBJ10HO8KXRV&th=1",
+    "reviews": [
+      "I like the quality ,.colour and stich  , size is perfect, value for money",
+      "Good, but too small for me.Easy to carry and stylish",
+      "Good quality. Spacious and light weight.",
+      "Vary good product quality",
+      "Got the pouch delivered today. Found the product same as per the description. Have spacious compartment and zip is steady and smooth. Guess, good for the price.",
+      "Lightweight and has lots of space. Looks very sleek. Complete value for money.",
+      "After repeated bad experiences with online shopping I was literally disheartened and could never dare to shop online but I was forced to buy this by my cousin and was extremely extremely happy and joyful seeing the quality of the material finishing of the stitches I am just loving it I got exactly what I wanted after ages.A brand level product",
+      "It is good and waterproof"
+    ],
+    "include_full_details": true,
+    "asin": "B0CTMDW218",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [
+        "Color Mismatch"
+      ],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Quality"
+      ],
+      "price_range": {
+        "max": 300,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "ketmart Small Crossbody Cell Phone Bag for Women, Mini Over Shoulder Handbag Purse with Womens Crossbody Cell Phone Purse Holder Wallet.",
+    "overall_sentiment": "Positive",
+    "sentiment_score": 0.48,
+    "confidence_score": 69.0,
+    "confidence_level": "High Confidence: Reviews indicate this is likely a good product",
+    "pros": [
+      "I like the quality ,.colour and stich  , size is perfect, value for money",
+      "Good, but too small for me.Easy to carry and stylish",
+      "It is good and waterproof",
+      "Spacious and light weight.",
+      "Vary good product quality"
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 69% calculated based on:\n\u2022 37.0 points from sentiment score (0.48)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 4.7 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 37.0,
+      "review_count_component": 27.5,
+      "specificity_component": 4.7,
+      "balance_component": 0.0
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product price (Rs 469) is outside the user's preferred price range (Rs 0 - Rs 300).  There are no specific brand preferences. The product is noted as having good quality, which matches the user's feature priority. The absence of 'Color Mismatch' in the cons implies the product does not necessarily have that issue. The product does not meet the minimum review count (8 vs 10) and does not meet the minimum sentiment score (0.48 vs 0.5), also the confidence score is below the minimum threshold (69 vs 70).",
+    "preference_match_score": 30
+  },
+  "timestamp": "2025-04-21T21:19:30.458231",
+  "product_id": "ketmart Small Crossbody Cell Phone Bag for Women, ..._20250421_211930"
+}

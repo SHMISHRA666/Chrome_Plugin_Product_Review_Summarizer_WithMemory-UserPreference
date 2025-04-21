@@ -1,0 +1,72 @@
+{
+  "product_data": {
+    "title": "Dilbahar's Aplam Chaplam Khatta 400G Pack Of 1 | Aam Pachak Khatta Goli | Digestive Goli Pachak | Mukhwas Mouth Freshener | Aplam Chaplam Churan Goli | Churan Digestive | After-Meal Treat",
+    "site": "amazon.in",
+    "price": "\u20b9211.00",
+    "url": "https://www.amazon.in/gp/product/B0BRFSX356/ref=ewc_pr_img_9?smid=AA8M3HRKINTK2&th=1",
+    "reviews": [
+      "The person who loves khatta flavour, they will love it.",
+      "A mouth-watering digestive item. It's a great delight to those who have got a craving for very sour digestive.",
+      "Ain't going to return but the is nothing like I expect as per the reviews.",
+      "Me isko 10-11 baar order kar chuka hoon iska taste aur aam papad ki tightness bohot mast hai gilgile bohot bure lagte hain lekin gulbahar ke bohot hi ache aur clean hain. Best quality at best price thanks gul bahar",
+      "Tasty and too good",
+      "Extremly salty n sour needs to reduce it or one will get blood pressure problems \ud83d\ude1f",
+      "This item have excessive salt which can affect your health. Don't consume it  in large quantities.plz reduce the salt content, it's very very salty.",
+      "Bad taste don't buy"
+    ],
+    "include_full_details": true,
+    "asin": "B0BRFSX356",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Quality"
+      ],
+      "price_range": {
+        "max": 300,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "Dilbahar's Aplam Chaplam Khatta 400G Pack Of 1 | Aam Pachak Khatta Goli | Digestive Goli Pachak | Mukhwas Mouth Freshener | Aplam Chaplam Churan Goli | Churan Digestive | After-Meal Treat",
+    "overall_sentiment": "Neutral",
+    "sentiment_score": 0.19,
+    "confidence_score": 68.0,
+    "confidence_level": "High Confidence: Reviews indicate this is likely a good product",
+    "pros": [
+      "Tasty and too good",
+      "A mouth-watering digestive item.",
+      "It's a great delight to those who have got a craving for very sour digestive.",
+      "The person who loves khatta flavour, they will love it.",
+      "Best quality at best price thanks gul bahar"
+    ],
+    "cons": [
+      "Bad taste don't buy"
+    ],
+    "confidence_explanation": "Confidence score of 68% calculated based on:\n\u2022 29.8 points from sentiment score (0.19)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 4.0 points from review specificity\n\u2022 7.1 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 29.8,
+      "review_count_component": 27.5,
+      "specificity_component": 4.0,
+      "balance_component": 7.1
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "Disproportionate pros (5) compared to cons (1)"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product price of \u20b9211.00 is within the user's specified price range of Rs 0.0 to Rs 300.0. There are no specific brand preferences indicated by the user, so this product does not conflict. The product is described as having 'Good Quality', which aligns with the user's feature priorities. There are no 'avoid_features' specified, so this product does not conflict in that regard. However, the review count of 8 is below the minimum threshold of 10, the sentiment score of 0.19 is below the minimum threshold of 0.5, and the confidence score of 68.0 is below the minimum threshold of 70.0%.",
+    "preference_match_score": 50
+  },
+  "timestamp": "2025-04-21T21:15:10.774325",
+  "product_id": "Dilbahar's Aplam Chaplam Khatta 400G Pack Of 1 | A..._20250421_211510"
+}

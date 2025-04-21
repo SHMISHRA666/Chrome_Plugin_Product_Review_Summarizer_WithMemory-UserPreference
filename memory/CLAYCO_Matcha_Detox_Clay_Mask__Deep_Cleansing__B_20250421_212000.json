@@ -1,0 +1,72 @@
+{
+  "product_data": {
+    "title": "CLAYCO Matcha Detox Clay Mask | Deep Cleansing & Brightening | Green Tea & Collagen | Tan Removal & Dark Spot Reduction | Vegan Japanese Skincare | 50ml",
+    "site": "amazon.in",
+    "price": "\u20b9809.00",
+    "url": "https://www.amazon.in/CLAYCO-Purifying-Matcha-Clay-Mask/dp/B0BYQ5BPDN/ref=pd_ci_mcx_mh_mcx_views_0_title?pd_rd_w=dTZrc&content-id=amzn1.sym.fa0aca50-60f7-47ca-a90e-c40e2f4b46a9%3Aamzn1.symc.ca948091-a64d-450e-86d7-c161ca33337b&pf_rd_p=fa0aca50-60f7-47ca-a90e-c40e2f4b46a9&pf_rd_r=MQ3J3TD7DDGKBRFEDRN7&pd_rd_wg=DJngX&pd_rd_r=6093c55a-7eef-40b4-b1d4-66ba98f21513&pd_rd_i=B0BYQ5BPDN&th=1",
+    "reviews": [
+      "I really wanted to give a try to this brand & being an oily skin girlie clay mask is something that I am really fond of & this clay mask does the job sooo pretty well. Just leave it on for 10 mins & it makes my skin smooth & detoxifies. Happy with it.",
+      "I absolutely loved the product, my skin was glowing and it was such a soothing effect.",
+      "Seriously it\u2019s so so good . I just love how instantly it calmed my skin and I could see visible  glow. Definitely worth the hype and money \u2728",
+      "One should buy this products",
+      "The Clay Mask works wonders! It cleanses deeply without drying out my skin. After use, my pores look smaller, and my skin feels smoother and brighter. Highly recommend!",
+      "I haven't seen any effect of this face pack on my face so I will say its okayish.",
+      "Really liked this mask, skin feels smooth and soft after usage. Perfect face mask for Oily Skin and worth the price. High quality face mask",
+      "kuch khas nhi hai"
+    ],
+    "include_full_details": true,
+    "asin": "B0BYQ5BPDN",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [
+        "Color Mismatch"
+      ],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Quality"
+      ],
+      "price_range": {
+        "max": 300,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "CLAYCO Matcha Detox Clay Mask | Deep Cleansing & Brightening",
+    "overall_sentiment": "Neutral",
+    "sentiment_score": 0.2,
+    "confidence_score": 63.0,
+    "confidence_level": "Moderate Confidence: Reviews show mixed but generally positive signals",
+    "pros": [
+      "Happy with it.",
+      "Really liked this mask, skin feels smooth and soft after usage.",
+      "I absolutely loved the product, my skin was glowing and it was such a soothing effect.",
+      "Perfect face mask for Oily Skin and worth the price.",
+      "Just leave it on for 10 mins & it makes my skin smooth & detoxifies."
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 63% calculated based on:\n\u2022 30.0 points from sentiment score (0.20)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 5.6 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 30.0,
+      "review_count_component": 27.5,
+      "specificity_component": 5.6,
+      "balance_component": 0.0
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product's price (Rs 809.00) is outside the user's specified price range (Rs 0.0 to Rs 300.0). The product is not from a preferred brand as no brand preferences were specified. The reviews indicate the product may provide good quality, which aligns with the user's prioritized feature. There is no mention of color mismatch, so the product does not violate the user's avoidance feature. The review count (8) is below the minimum threshold of 10 reviews, the sentiment score (0.2) is below the minimum threshold of 0.5 and the confidence score (63.0) is below the minimum threshold of 70%.",
+    "preference_match_score": 25
+  },
+  "timestamp": "2025-04-21T21:20:00.913197",
+  "product_id": "CLAYCO Matcha Detox Clay Mask | Deep Cleansing & B..._20250421_212000"
+}

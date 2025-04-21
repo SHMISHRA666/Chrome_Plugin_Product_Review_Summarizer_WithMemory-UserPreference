@@ -1,0 +1,58 @@
+{
+  "product_data": {
+    "title": "Samsung Galaxy S23 Ultra",
+    "site": "amazon.com",
+    "price": "$1199.99",
+    "url": "https://www.amazon.com/samsung-galaxy-s23-ultra"
+  },
+  "analysis_results": {
+    "title": "Samsung Galaxy S23 Ultra",
+    "overall_sentiment": "Neutral",
+    "sentiment_score": 0.0,
+    "confidence_score": 25.0,
+    "confidence_level": "Very Low Confidence: Reviews suggest significant issues with this product",
+    "pros": [],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 25% calculated based on:\n\u2022 25.0 points from sentiment score (0.00)\n\u2022 0.0 points from review count (0 reviews)\n\u2022 0.0 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 25.0,
+      "review_count_component": 0.0,
+      "specificity_component": 0.0,
+      "balance_component": 0.0
+    },
+    "review_count": 0,
+    "reliability_score": 40.0,
+    "reliability_level": "Low",
+    "issues": [
+      "No reviews found for analysis"
+    ],
+    "warnings": [
+      "Very low confidence score (25.0) indicates unreliable analysis"
+    ],
+    "insights": [
+      "Neutral sentiment (0.00) indicates mixed opinions"
+    ],
+    "preference_match_analysis": "Due to the lack of reviews, a full preference match analysis cannot be performed. However:\n- Price: The product price ($1199.99) is within the user's preferred range (Rs 1000.0 to Rs 1500.0).\n- Brand: Samsung is a preferred brand.\n- Features: Cannot determine if the product has the user's prioritized features (Great camera, Fast performance, Beautiful display) or avoids unwanted features (Expensive, Battery life could be better) due to lack of reviews.\n\n**Minimum Thresholds Not Met:**\n- Review count (0 reviews) is below the minimum threshold (10 reviews).\n- Sentiment score (0.0) is below the minimum threshold (0.5).\n- Confidence score (25.0%) is below the minimum threshold (70.0%).",
+    "preference_match_score": 0,
+    "category": "smartphone",
+    "previous_analysis_summary": "Previous analysis (2025-04-21):\n- Overall sentiment score: 0.28\n- Confidence score: 66.0\n- Key pros: The design, look and feel of the UI, battery, display, multi-tasking and AI functionality is top-notch., Camera, gaming experience, S-pen support is pretty good too., One of the best flagship phone, if not the best one.\n- Key cons: None.\n\nChanges:\n- Sentiment score significantly decreased from 0.28 to 0.0.\n- Confidence score decreased from 66.0 to 25.0.\n- The current analysis has no identified pros or cons, while the previous analysis had several pros.\n\nThe product seems to have changed significantly, potentially due to different data sources or changes in user perception over time.",
+    "final_recommendation": "Due to the extremely low confidence score and lack of reviews in the current analysis, compared to the previous analysis (which had a higher sentiment and confidence) along with unmet user threshold (review count, sentiment score, and confidence score), the product is not recommended without further investigation. The significant drop in sentiment and confidence compared to the previous analysis warrants a thorough reassessment with more comprehensive data.",
+    "minimum_thresholds_met": "false",
+    "has_previous_analysis": true,
+    "previous_analysis_date": "2025-04-21",
+    "preference_match": {
+      "preference_match_score": 20,
+      "preference_matches": {
+        "avoid_features": "Product doesn't have any features to avoid"
+      },
+      "preference_mismatches": {
+        "features": "Product doesn't have any of the prioritized features",
+        "review_count": "Review count (0) is below threshold (10)",
+        "sentiment": "Sentiment score (0.00) is below threshold (0.5)",
+        "confidence": "Confidence score (25.00%) is below threshold (70.0%)"
+      }
+    }
+  },
+  "timestamp": "2025-04-21T21:39:06.600497",
+  "product_id": "Samsung Galaxy S23 Ultra_20250421_213906"
+}

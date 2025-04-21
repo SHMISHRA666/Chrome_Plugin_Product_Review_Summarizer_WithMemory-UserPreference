@@ -1,0 +1,72 @@
+{
+  "product_data": {
+    "title": "Samsung Galaxy S25 Ultra 5G AI Smartphone (Titanium Black, 12GB RAM, 256GB Storage), 200MP Camera, S Pen Included, Long Battery Life",
+    "site": "amazon.in",
+    "price": "\u20b91,29,999.00",
+    "url": "https://www.amazon.in/Samsung-Smartphone-Titanium-Storage-Included/dp/B0DSKNQW8F/ref=sr_1_1_sspa?dib=eyJ2IjoiMSJ9.hv6NA5ualu9lei5y5vIe2ItNMsoqfFa4_h6MJKugk-fsK67bZhU9wrtRDN_6F07LqEO_tg9obaFsxeFMgIOAwbRxWcPhB17lyxDmmN_Ul6JOUWD1xF7AcvuspzC7x4OzUrv25SdhjidrANT5GmE7DaMTsFoWzkloXMmrNfUhJTTAFflbwkYcAiqSLk6dys0lJ-WOFDc5J1etNKsovCnXdojuruNGNLwLyKrWIRZKCNM.248RSCeOQ27yTHdMn2sy6_W4YfpmJjN9pBfG7q8M6HU&dib_tag=se&keywords=samsung%2Bs24%2Bultra%2B5g%2Bmobile&nsdOptOutParam=true&qid=1745249806&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1",
+    "reviews": [
+      "I was initially hesitant to purchase the S25 Ultra, but after 2 weeks of use, I'm thrilled to share my overwhelmingly positive experience!The battery life has been a standout feature for me, consistently lasting a full day and often stretching into the next with moderate to heavy use.The phone's overall performance has been seamless, with lightning-fast app loading, effortless multitasking, and silky-smooth graphics.The display is stunning, with vibrant colors and crisp details that make every visual experience a joy.I've also been impressed with the camera's capabilities, delivering crisp, high-quality photos and videos in a variety of conditions.Overall, the S25 Ultra has exceeded my expectations and truly lives up to its reputation as an Android powerhouse. If you're in the market for a new flagship device, I highly recommend giving this one a serious look!",
+      "The design, look and feel of the UI, battery, display, multi-tasking and AI functionality is top-notch. Camera, gaming experience, S-pen support is pretty good too. One of the best flagship phone, if not the best one.",
+      "Fastest processing speed ever seen, No doubt Best Camera, battery life also long lasting, it consume very less battery when u are not using your device. 25volt charger also enough for Charging this mobile it only takes max to max half hour to 45 min to charge full. laptop & PC fails in front of this mobile.",
+      "Good phone, most talked about AI but not as good as advertise, Bixby is not as good as siri and Alexa, AI is steel at basic level, Batery back is good, fast charging, camera is good, but 100x is not as clear as expected.",
+      "EEnhanced battery life is a popular request for future smartphone models.  Many users desire a device that can keep up with their busy schedules throughout the day.  Longer battery performance is always a welcome improvement in technology.  It allows for extended use without needing to recharge frequently.  Hopefully, upcoming devices will address this need with innovative battery solutions.Battery 3/5 (SOT- 6h-7h). PERFORMANCE 6/5\ud83e\udd70Phone is outstanding 4/5.But I am disappointed with service of seller (liberty sale) for sending preactivated device(22/03/2025)Date of purchase-28/03/2025Date of receiving-02/04/2025This seller has other reviews as well for sending preactivated device.Amazon need to work on it.Else received on promised time in good condition",
+      "seamless working",
+      "Seller - Exculsive Indian StoreI purchased the Samsung S25 Ultra (12GB RAM, 512GB storage) from Amazon on April 13, 2025, and received it the next day, April 14. Initially, everything seemed perfect. However, on April 15, after transferring all my data from my previous phone, I came across a review where someone mentioned their phone was a \"proactive unit\"\u2014meaning the warranty had already started before delivery.That prompted me to check my own device, and to my surprise, I found the same issue: the warranty had started two months before I even received the phone. I immediately contacted Amazon customer support. At first, they denied any issue and advised me to visit the service center.When I contacted the brand's service center, they confirmed this is a seller-related issue and not something the brand is responsible for. They clearly stated that Amazon is liable in this case. I called Amazon again, this time expressing my frustration and sharing the response I received from the brand. Thankfully, Amazon then agreed to return the device, which was a relief.However, this situation caused me a lot of inconvenience, especially since I had already transferred all my data and had to do it all over again. I urge all potential buyers to check the device warranty status as soon as they receive their phone, before setting it up.Important to note: the phone itself is amazing and a true king in its category. This issue had nothing to do with the device quality\u2014it was a seller-related problem.Thanks to Amazon for resolving the issue quickly, but I hope they take stricter action against such sellers to prevent future occurrences."
+    ],
+    "include_full_details": true,
+    "asin": "B0DSKNQW8F",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [
+        "Poor Battery"
+      ],
+      "brand_preferences": [
+        "Sony"
+      ],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Camera Quality"
+      ],
+      "price_range": {
+        "max": 30000,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "Samsung Galaxy S25 Ultra 5G AI Smartphone (Titanium Black, 12GB RAM, 256GB Storage), 200MP Camera, S Pen Included, Long Battery Life",
+    "overall_sentiment": "Neutral",
+    "sentiment_score": 0.28,
+    "confidence_score": 66.0,
+    "confidence_level": "High Confidence: Reviews indicate this is likely a good product",
+    "pros": [
+      "The design, look and feel of the UI, battery, display, multi-tasking and AI functionality is top-notch.",
+      "Camera, gaming experience, S-pen support is pretty good too.",
+      "One of the best flagship phone, if not the best one.",
+      "Good phone, most talked about AI but not as good as advertise, Bixby is not as good as siri and Alexa, AI is steel at basic level, Batery back is good, fast charging, camera is good, but 100x is not as clear as expected."
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 66% calculated based on:\n\u2022 32.0 points from sentiment score (0.28)\n\u2022 26.0 points from review count (7 reviews)\n\u2022 7.5 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 32.0,
+      "review_count_component": 26.0,
+      "specificity_component": 7.5,
+      "balance_component": 0.0
+    },
+    "review_count": 7,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (7 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product's price (Rs 129,999.00) is outside the user's specified price range (Rs 0.0 to Rs 30000.0). The brand (Samsung) is not in the user's preferred brand list (Sony). The product mentions \"Good Camera Quality\", which aligns with the user's prioritized features. While the product boasts long battery life, which is the opposite of the user's \"avoid features\" (Poor Battery), the conflicting information could affect the overall match. The number of reviews (7) is below the user's minimum review threshold (10), the sentiment score (0.28) is below the user's sentiment threshold (0.5) and the confidence score (66) is below the user's confidence threshold (70).",
+    "preference_match_score": 10
+  },
+  "timestamp": "2025-04-21T21:17:22.409321",
+  "product_id": "Samsung Galaxy S25 Ultra 5G AI Smartphone (Titaniu..._20250421_211722"
+}

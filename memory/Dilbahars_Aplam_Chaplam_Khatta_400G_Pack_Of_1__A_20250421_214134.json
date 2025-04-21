@@ -1,0 +1,82 @@
+{
+  "product_data": {
+    "title": "Dilbahar's Aplam Chaplam Khatta 400G Pack Of 1 | Aam Pachak Khatta Goli | Digestive Goli Pachak | Mukhwas Mouth Freshener | Aplam Chaplam Churan Goli | Churan Digestive | After-Meal Treat",
+    "site": "amazon.in",
+    "price": "\u20b9211.00",
+    "url": "https://www.amazon.in/gp/product/B0BRFSX356/ref=ewc_pr_img_9?smid=AA8M3HRKINTK2&th=1",
+    "reviews": [
+      "The person who loves khatta flavour, they will love it.",
+      "A mouth-watering digestive item. It's a great delight to those who have got a craving for very sour digestive.",
+      "Ain't going to return but the is nothing like I expect as per the reviews.",
+      "Me isko 10-11 baar order kar chuka hoon iska taste aur aam papad ki tightness bohot mast hai gilgile bohot bure lagte hain lekin gulbahar ke bohot hi ache aur clean hain. Best quality at best price thanks gul bahar",
+      "Tasty and too good",
+      "Extremly salty n sour needs to reduce it or one will get blood pressure problems \ud83d\ude1f",
+      "This item have excessive salt which can affect your health. Don't consume it  in large quantities.plz reduce the salt content, it's very very salty.",
+      "Bad taste don't buy"
+    ],
+    "include_full_details": true,
+    "asin": "B0BRFSX356",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [],
+      "price_range": {
+        "max": 0,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "Dilbahar's Aplam Chaplam Khatta 400G Pack Of 1 | Aam Pachak Khatta Goli | Digestive Goli Pachak | Mukhwas Mouth Freshener | Aplam Chaplam Churan Goli | Churan Digestive | After-Meal Treat",
+    "overall_sentiment": "Neutral",
+    "sentiment_score": 0.19,
+    "confidence_score": 69.0,
+    "confidence_level": "Medium Confidence: Reviews indicate this is likely a good product",
+    "pros": [
+      "Me isko 10-11 baar order kar chuka hoon iska taste aur aam papad ki tightness bohot mast hai gilgile bohot bure lagte hain lekin gulbahar ke bohot hi ache aur clean hain.",
+      "It's a great delight to those who have got a craving for very sour digestive.",
+      "Best quality at best price thanks gul bahar",
+      "A mouth-watering digestive item.",
+      "Tasty and too good"
+    ],
+    "cons": [
+      "Bad taste don't buy",
+      "Extremely salty n sour needs to reduce it or one will get blood pressure problems",
+      "This item have excessive salt which can affect your health."
+    ],
+    "confidence_explanation": "Confidence score of 69% calculated based on:\n\u2022 29.8 points from sentiment score (0.19)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 4.8 points from review specificity\n\u2022 7.1 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 29.8,
+      "review_count_component": 27.5,
+      "specificity_component": 4.8,
+      "balance_component": 7.1
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "Disproportionate pros (5) compared to cons (1)"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product price (\u20b9211.00) is within the user's price range (Rs 0.0 to Rs 0.0). There are no brand preferences specified. There are no feature priorities or features to avoid specified.",
+    "preference_match_score": 0,
+    "analysis_summary": {
+      "sentiment_change": "Sentiment score increased from 0.3 to 0.19.",
+      "pros_change": "New pros include: Me isko 10-11 baar order kar chuka hoon iska taste aur aam papad ki tightness bohot mast hai gilgile bohot bure lagte hain lekin gulbahar ke bohot hi ache aur clean hain., It's a great delight to those who have got a craving for very sour digestive., Best quality at best price thanks gul bahar, A mouth-watering digestive item., Tasty and too good. Previous pros: Good product, It's beautiful, Very beautiful and good quality exact as shown in picture.",
+      "cons_change": "New cons include: Bad taste don't buy, Extremely salty n sour needs to reduce it or one will get blood pressure problems, This item have excessive salt which can affect your health.. Previous cons: None",
+      "confidence_change": "Confidence score increased from 63.0 to 69.0.",
+      "product_evolution": "The product sentiment has shifted towards neutral, confidence has improved slightly, and more specific pros and cons have emerged compared to the previous analysis."
+    },
+    "final_recommendation": "Given the neutral sentiment, low reliability and a low confidence score, and that the product does not meet the minimum thresholds for review count, sentiment score and confidence score, additional research is recommended before making a purchase. The confidence score is under 70.0%. The review count is less than 10.0. The product's sentiment score is under 0.5.",
+    "has_previous_analysis": true,
+    "previous_analysis_date": "2025-04-21"
+  },
+  "timestamp": "2025-04-21T21:41:34.099397",
+  "product_id": "Dilbahar's Aplam Chaplam Khatta 400G Pack Of 1 | A..._20250421_214134"
+}

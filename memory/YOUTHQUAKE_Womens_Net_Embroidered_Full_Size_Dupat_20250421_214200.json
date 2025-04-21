@@ -1,0 +1,76 @@
+{
+  "product_data": {
+    "title": "YOUTHQUAKE Women's Net Embroidered Full Size Dupatta With 4 Side Golden Lace",
+    "site": "amazon.in",
+    "price": "\u20b9399",
+    "url": "https://www.amazon.in/gp/product/B08JH7DKBS/ref=ewc_pr_img_1?smid=A1UYFMHALTPM6X&th=1&psc=1",
+    "reviews": [
+      "Very much suits",
+      "The media could not be loaded.",
+      "Good product",
+      "Very beautiful and good quality exact as shown in picture",
+      "Wanted a light pink one as the picture showed. But what I received was very very dark pink.",
+      "Color is quite good dark one, worth in this range . Small booti allover with broad boarder.",
+      "It's beautiful",
+      "I bought it to design but all golden sequence are falling down and in the middle I find there is plain net no embroidery has been done. Very bad experience. Not recommend at all."
+    ],
+    "include_full_details": true,
+    "asin": "B08JH7DKBS",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [],
+      "price_range": {
+        "max": 0,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "YOUTHQUAKE Women's Net Embroidered Full Size Dupatta With 4 Side Golden Lace",
+    "overall_sentiment": "Positive",
+    "sentiment_score": 0.3,
+    "confidence_score": 63.0,
+    "confidence_level": "Moderate Confidence: Reviews show mixed but generally positive signals",
+    "pros": [
+      "Good product",
+      "It's beautiful",
+      "Very beautiful and good quality exact as shown in picture"
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 63% calculated based on:\n\u2022 32.5 points from sentiment score (0.30)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 3.0 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 32.5,
+      "review_count_component": 27.5,
+      "specificity_component": 3.0,
+      "balance_component": 0.0
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product's price (Rs 399) is compared against the user's price range (Rs 0.0 to Rs 0.0). The product is from brand 'YOUTHQUAKE' and compared against user's preferred brands (No specific brand preferences). User has No specific feature priorities or features to avoid. The product does not meet the minimum thresholds for review count (at least 10 reviews), sentiment score (at least 0.5), and confidence score (at least 70.0%).",
+    "preference_match_score": 0,
+    "previous_analysis_summary": {
+      "sentiment_score_change": "Sentiment score increased from 0.19 to 0.3.",
+      "confidence_score_change": "Confidence score decreased from 69.0 to 63.0.",
+      "pros_change": "Pros are now focused on the product's appearance and quality. The previous pros mentioned taste (for a food item, which seems irrelevant to the current product).",
+      "cons_change": "Previously there were cons related to taste and salt content. The current analysis did not identify any cons.",
+      "evolution_summary": "The product is showing a slight improvement in sentiment but a decrease in confidence. The reviews focus on different attributes compared to the previous analysis, suggesting a different product or a shift in customer perception. Overall sentiment has improved but confidence went down."
+    },
+    "final_recommendation": "Due to the low reliability score, limited review count, and a sentiment score below the threshold, additional research is recommended before making a purchase. There's a change in customer feedback compared to the previous analysis, so caution is advised. Preference match score is 0 as the product does not meet minimum thresholds.",
+    "has_previous_analysis": true,
+    "previous_analysis_date": "2025-04-21"
+  },
+  "timestamp": "2025-04-21T21:42:00.317144",
+  "product_id": "YOUTHQUAKE Women's Net Embroidered Full Size Dupat..._20250421_214200"
+}
