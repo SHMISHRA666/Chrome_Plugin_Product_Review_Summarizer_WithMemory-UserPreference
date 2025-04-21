@@ -1,0 +1,68 @@
+{
+  "product_data": {
+    "title": "YOUTHQUAKE Women's Net Embroidered Full Size Dupatta With 4 Side Golden Lace",
+    "site": "amazon.in",
+    "url": "https://www.amazon.in/gp/product/B08JH7DKBS/ref=ewc_pr_img_1?smid=A1UYFMHALTPM6X&th=1&psc=1",
+    "price": "\u20b9399",
+    "reviews": [
+      "Very much suits",
+      "The media could not be loaded.",
+      "Good product",
+      "Very beautiful and good quality exact as shown in picture",
+      "Wanted a light pink one as the picture showed. But what I received was very very dark pink.",
+      "Color is quite good dark one, worth in this range . Small booti allover with broad boarder.",
+      "It's beautiful",
+      "I bought it to design but all golden sequence are falling down and in the middle I find there is plain net no embroidery has been done. Very bad experience. Not recommend at all."
+    ],
+    "force_new_analysis": true,
+    "user_preferences": {
+      "avoid_features": [
+        "Color Mismatch"
+      ],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Quality"
+      ],
+      "price_range": {
+        "max": 300,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "YOUTHQUAKE Women's Net Embroidered Full Size Dupatta With 4 Side Golden Lace",
+    "overall_sentiment": "Positive",
+    "sentiment_score": 0.3,
+    "confidence_score": 63.0,
+    "confidence_level": "Moderate Confidence: Reviews show mixed but generally positive signals",
+    "pros": [
+      "It's beautiful",
+      "Good product",
+      "Very beautiful and good quality exact as shown in picture"
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 63% calculated based on:\n\u2022 32.5 points from sentiment score (0.30)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 3.0 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 32.5,
+      "review_count_component": 27.5,
+      "specificity_component": 3.0,
+      "balance_component": 0.0
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product price (\u20b9399) does not fall within the user's preferred price range (Rs 0.0 to Rs 300.0). There are no specific brand preferences. The product receives positive mentions regarding quality, aligning with the user's 'Good Quality' feature priority. However, there are mentions of color mismatch, which is a feature the user wants to avoid. The review count (8) does not meet the minimum threshold of 10 reviews, the sentiment score (0.3) is below the 0.5 threshold, and the confidence score (63.0) is below the 70% threshold.",
+    "preference_match_score": 30
+  },
+  "timestamp": "2025-04-22T00:06:21.962242",
+  "product_id": "YOUTHQUAKE Women's Net Embroidered Full Size Dupat..._20250422_000621"
+}

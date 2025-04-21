@@ -80,6 +80,35 @@ class ActionLayer:
             self.decision_layer.set_product_info(data)
             self.set_product_info(data)
 
+            # Check if we should skip memory check (e.g., if force_new_analysis is set)
+            force_new_analysis = data.get("force_new_analysis", False)
+            
+            # Check for existing analyses in memory if not forcing a new analysis
+            if not force_new_analysis:
+                existing_analyses = self.memory_layer.find_product_by_title(data["title"])
+                
+                if existing_analyses:
+                    # We found an existing analysis
+                    logger.info(f"Found {len(existing_analyses)} existing analyses for product: {data['title']}")
+                    
+                    # Format the response for user confirmation
+                    existing_analysis = existing_analyses[0]  # Use the most recent one
+                    timestamp = existing_analysis.get("timestamp", "unknown time")
+                    
+                    return web.json_response({
+                        "status": "memory_match_found",
+                        "message": "An existing analysis was found for this product.",
+                        "existing_analysis": {
+                            "product_id": existing_analysis.get("product_id", ""),
+                            "timestamp": timestamp,
+                            "summary": existing_analysis.get("analysis_results", {}).get("summary", "No summary available"),
+                        },
+                        "options": [
+                            {"id": "use_existing", "label": "Use existing analysis"},
+                            {"id": "new_analysis", "label": "Perform new analysis"}
+                        ]
+                    })
+            
             # Extract user preferences if present
             user_preferences = None
             if "user_preferences" in data:
@@ -149,6 +178,146 @@ class ActionLayer:
             
         except Exception as e:
             logger.error(f"Error processing product detection: {e}")
+            return web.json_response({"error": str(e)}, status=500)
+
+    async def handle_memory_choice(self, request):
+        """
+        Handle user's choice regarding existing memory entry
+        
+        Args:
+            request: aiohttp Request object containing the user's choice
+            
+        Returns:
+            JSON response with either the existing analysis or the result of a new analysis
+        """
+        try:
+            data = await request.json()
+            
+            # Validate required fields
+            if "choice" not in data:
+                logger.error("Missing required field: choice")
+                return web.json_response({"error": "Missing required field: choice"}, status=400)
+            
+            if "product_id" not in data and data["choice"] == "use_existing":
+                logger.error("Missing required field: product_id")
+                return web.json_response({"error": "Missing required field: product_id"}, status=400)
+            
+            # Handle user choice
+            choice = data["choice"]
+            
+            if choice == "use_existing":
+                # Retrieve existing analysis
+                product_id = data["product_id"]
+                existing_analysis = self.memory_layer.retrieve_product_analysis(product_id)
+                
+                if not existing_analysis:
+                    logger.error(f"No analysis found for product_id: {product_id}")
+                    return web.json_response({
+                        "error": "No analysis found. Please try a new analysis.",
+                        "status": "error"
+                    }, status=404)
+                
+                # Return the existing analysis
+                logger.info(f"Returning existing analysis for product_id: {product_id}")
+                return web.json_response({
+                    "status": "success",
+                    "message": "Using existing analysis",
+                    "from_memory": True,
+                    **existing_analysis["analysis_results"]
+                })
+                
+            elif choice == "new_analysis":
+                # Set force_new_analysis flag in the product data
+                if "product_data" in data:
+                    product_data = data["product_data"]
+                    product_data["force_new_analysis"] = True
+                    
+                    # Call the product detection handler directly with the product data
+                    logger.info(f"Performing new analysis for product: {product_data.get('title', 'Unknown')}")
+                    
+                    try:
+                        # Process the product data directly instead of using a mock request
+                        # Set product info in decision layer and action layer
+                        self.decision_layer.set_product_info(product_data)
+                        self.set_product_info(product_data)
+                        
+                        # Extract user preferences if present
+                        user_preferences = None
+                        if "user_preferences" in product_data:
+                            user_preferences = product_data.get("user_preferences")
+                            logger.info(f"User preferences received: {user_preferences}")
+                        
+                        user_preferences = await self.perception_layer.process_user_preferences(user_preferences)
+                        
+                        # 1. Process product through perception layer
+                        category = await self.perception_layer.classify_product(product_data["title"])
+                        self.decision_layer.set_category(category)  # Set the category in decision layer
+                        
+                        # Pass user preferences to craft_initial_prompt
+                        prompt = await self.perception_layer.craft_initial_prompt(
+                            product_data, 
+                            category,
+                            user_preferences=user_preferences
+                        )
+                        tool_plan = await self.perception_layer.get_tool_invocation_plan(prompt)
+                        print("Received tool plan from LLM:")
+                        print(f"Plan with {len(tool_plan.get('tool_calls', []))} tool calls: {[t.get('tool_name', t.get('name', 'unknown')) for t in tool_plan.get('tool_calls', [])]}")
+                        
+                        # 2. Execute tool plan and get results
+                        results = await self.execute_tool_plan(tool_plan)
+                        
+                        # 3. Check tool results for reliability
+                        self_check = await self.check_tool_results(results)
+                        print(f"Self Check: {self_check}")
+                        
+                        # 4. Get final analysis from decision layer
+                        final_response = await self.decision_layer.perform_final_reasoning(results, self_check, user_preferences)
+                        
+                        # 5. Store analysis in memory layer
+                        self.memory_layer.store_product_analysis(product_data, final_response)
+                        
+                        # Add layer statuses to response
+                        final_response["layerStatuses"] = {
+                            "perception": "complete",
+                            "memory": "complete",
+                            "decision": "complete",
+                            "action": "complete"
+                        }
+                        
+                        # Add the review note if it exists
+                        if "review_note" in product_data:
+                            final_response["review_note"] = product_data["review_note"]
+                        
+                        # Evaluate preference match
+                        preference_match = await self.decision_layer.evaluate_preference_match(
+                            analysis_results=final_response,
+                            user_preferences=user_preferences
+                        )
+                        
+                        # Include preference match in final results
+                        final_results = {**final_response, **preference_match}
+                        
+                        # Return the results
+                        return web.json_response(final_results)
+                        
+                    except Exception as e:
+                        logger.error(f"Error processing new analysis request: {e}")
+                        return web.json_response({"error": f"Error performing new analysis: {str(e)}"}, status=500)
+                else:
+                    logger.error("Missing required field: product_data")
+                    return web.json_response({
+                        "error": "Missing required field: product_data. Please provide the product data to analyze.",
+                        "status": "error"
+                    }, status=400)
+            else:
+                logger.error(f"Invalid choice: {choice}")
+                return web.json_response({
+                    "error": f"Invalid choice: {choice}. Valid choices are 'use_existing' or 'new_analysis'.",
+                    "status": "error"
+                }, status=400)
+                
+        except Exception as e:
+            logger.error(f"Error handling memory choice: {e}")
             return web.json_response({"error": str(e)}, status=500)
 
     async def execute_tool_plan(self, tool_plan):
@@ -481,6 +650,7 @@ class ActionLayer:
         """
         # Setup API routes
         app.router.add_post('/api/detect-product', self.handle_product_detection)
+        app.router.add_post('/api/handle-memory-choice', self.handle_memory_choice)
         app.router.add_get('/', self.health_check)
         
         # Setup CORS to allow requests from the Chrome extension

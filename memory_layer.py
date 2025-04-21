@@ -199,6 +199,56 @@ class MemoryLayer:
             logger.error(f"Error searching analyses: {e}")
             return []
 
+    def find_product_by_title(self, title, max_results=3):
+        """
+        Find products by title in the memory
+        
+        Args:
+            title: Product title to search for
+            max_results: Maximum number of results to return
+            
+        Returns:
+            List of matching memory entries, sorted by recency
+        """
+        try:
+            # Normalize the search title
+            search_title = title.lower().strip()
+            
+            # Get all JSON files in storage directory
+            files = [f for f in os.listdir(self.storage_dir) if f.endswith('.json') and f != "user_preferences.json"]
+            
+            # Sort by modification time (newest first)
+            files.sort(key=lambda x: os.path.getmtime(os.path.join(self.storage_dir, x)), 
+                      reverse=True)
+            
+            matches = []
+            for filename in files:
+                filepath = os.path.join(self.storage_dir, filename)
+                with open(filepath, 'r') as f:
+                    memory_entry = json.load(f)
+                    
+                    # Get the product title from the entry
+                    product_title = memory_entry['product_data'].get('title', '').lower().strip()
+                    
+                    # Compare the titles for a match
+                    # First check for exact match
+                    if product_title == search_title:
+                        matches.append(memory_entry)
+                    # Then check for substring match
+                    elif search_title in product_title or product_title in search_title:
+                        matches.append(memory_entry)
+                    
+                    # If we have enough matches, stop searching
+                    if len(matches) >= max_results:
+                        break
+                        
+            logger.info(f"Found {len(matches)} matching products for title: {title}")
+            return matches
+            
+        except Exception as e:
+            logger.error(f"Error finding product by title: {e}")
+            return []
+
     def store_user_preferences(self, user_preferences):
         """
         Store user preferences

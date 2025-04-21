@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const sentimentThreshold = document.getElementById('sentiment-threshold');
   const confidenceThreshold = document.getElementById('confidence-threshold');
   
-  // Server URL for API requests - make sure this matches your backend
-  const apiUrl = 'http://localhost:8080/api/detect-product';
+  // Server URL will be loaded from storage in initialize()
+  // Default is 'http://localhost:8080' if not found in storage
   
   // User preferences object
   let userPreferences = null;
@@ -49,6 +49,37 @@ document.addEventListener('DOMContentLoaded', () => {
    * Loads saved preferences and checks if current page is an Amazon product page
    */
   function initialize() {
+    // Load server configuration
+    chrome.storage.local.get(['serverUrl'], (result) => {
+      // Get server URL from storage or use default
+      let baseUrl = result.serverUrl || 'http://localhost:8080';
+      
+      // Sanitize the URL to remove any API endpoints
+      if (baseUrl.includes('/api/')) {
+        baseUrl = baseUrl.substring(0, baseUrl.indexOf('/api/'));
+      }
+      
+      // Remove trailing slash if present
+      if (baseUrl.endsWith('/')) {
+        baseUrl = baseUrl.slice(0, -1);
+      }
+      
+      window.apiUrl = baseUrl;
+      console.log('Using API server URL:', window.apiUrl);
+      
+      // Add server URL to UI
+      const serverUrlDisplay = document.createElement('div');
+      serverUrlDisplay.id = 'server-url-display';
+      serverUrlDisplay.className = 'server-url-display';
+      serverUrlDisplay.innerHTML = `<small>Server: ${window.apiUrl} <button id="change-server-btn" class="small-btn">Change</button></small>`;
+      
+      // Insert at the bottom of the container
+      document.querySelector('.container').appendChild(serverUrlDisplay);
+      
+      // Add event listener for the change server button
+      document.getElementById('change-server-btn').addEventListener('click', changeServerUrl);
+    });
+    
     // Load saved preferences
     loadUserPreferences();
     
@@ -321,61 +352,393 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function startAnalysis() {
     showLoading();
-    
-    // Request product data from content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (!tabs || tabs.length === 0) {
-        showError('Cannot detect current tab');
-        return;
-      }
-      
-      // First ensure the content script is loaded
-      ensureContentScriptLoaded(tabs[0].id, () => {
+
+    // Check if the API URL is loaded
+    if (!window.apiUrl) {
+      showError('Server URL not loaded yet. Please try again in a moment.');
+      return;
+    }
+
+    // First check if the server is running
+    checkServerConnection()
+      .then(isConnected => {
+        if (!isConnected) {
+          throw new Error(`Cannot connect to server at ${window.apiUrl}`);
+        }
+        
+        // Continue with the analysis process
+        return chrome.tabs.query({ active: true, currentWindow: true });
+      })
+      .then(tabs => {
+        if (!tabs || tabs.length === 0) {
+          throw new Error('Cannot detect current tab');
+        }
+        
         // Now that we know the content script is loaded, send the scrape request
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: 'scrapeProductData' },
-          (response) => {
-            // Handle any communication errors
-            if (chrome.runtime.lastError) {
-              console.error("Runtime error:", chrome.runtime.lastError);
-              showError(`Error: ${chrome.runtime.lastError.message}`);
-              return;
-            }
-            
-            // Check for valid response
-            if (!response || !response.productData) {
-              showError('Failed to retrieve product data');
-              return;
-            }
-            
-            // If there's a warning in the response
-            if (response.warning) {
-              statusMessage.textContent = response.warning;
-              statusMessage.className = 'status-warning';
-            }
-            
-            // Add user preferences to the product data
-            if (userPreferences) {
-              response.productData.user_preferences = userPreferences;
-            }
-            
-            // Send product data to API server
-            sendToApiServer(response.productData);
-          }
-        );
-      }, () => {
-        showError('Could not communicate with the page. Try refreshing the page and try again.');
+        return new Promise((resolve, reject) => {
+          ensureContentScriptLoaded(tabs[0].id, () => {
+            chrome.tabs.sendMessage(
+              tabs[0].id,
+              { action: 'scrapeProductData' },
+              (response) => {
+                // Handle any communication errors
+                if (chrome.runtime.lastError) {
+                  console.error("Runtime error:", chrome.runtime.lastError);
+                  reject(new Error(chrome.runtime.lastError.message));
+                  return;
+                }
+                
+                // Check for valid response
+                if (!response || !response.productData) {
+                  reject(new Error('Failed to retrieve product data'));
+                  return;
+                }
+                
+                // If there's a warning in the response
+                if (response.warning) {
+                  statusMessage.textContent = response.warning;
+                  statusMessage.className = 'status-warning';
+                }
+                
+                // Add user preferences to the product data
+                if (userPreferences) {
+                  response.productData.user_preferences = userPreferences;
+                }
+                
+                resolve(response.productData);
+              }
+            );
+          }, () => {
+            reject(new Error('Could not communicate with the page. Try refreshing the page and try again.'));
+          });
+        });
+      })
+      .then(productData => {
+        // Send product data to API server
+        sendToApiServer(productData);
+      })
+      .catch(error => {
+        console.error('Analysis error:', error);
+        showError(error.message);
+        loader.classList.add('hidden');
+        analyzeButton.disabled = false;
       });
+  }
+  
+  /**
+   * Check if the server is running by making a simple GET request
+   * @returns {Promise<boolean>} Promise that resolves to true if server is running
+   */
+  function checkServerConnection() {
+    // Make sure the API URL doesn't include any endpoints
+    let baseUrl = window.apiUrl;
+    
+    // Remove common API endpoints if they exist in the URL
+    if (baseUrl.includes('/api/')) {
+      baseUrl = baseUrl.substring(0, baseUrl.indexOf('/api/'));
+    }
+    
+    const healthUrl = `${baseUrl}/`;
+    console.log('Checking server health at:', healthUrl);
+    
+    return fetch(healthUrl, { 
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      return response.ok;
+    })
+    .catch(error => {
+      console.error('Server connection check failed:', error);
+      return false;
+    });
+  }
+  
+  /**
+   * Handle memory match response from the API
+   * @param {Object} data - API response with memory match data
+   * @param {Object} productData - Original product data
+   */
+  function handleMemoryMatch(data, productData) {
+    console.log("Memory match found:", data);
+    
+    // Create a modal dialog
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    
+    const modalContainer = document.createElement('div');
+    modalContainer.className = 'modal-container';
+    
+    const modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header';
+    modalHeader.innerHTML = '<h3>Existing Analysis Found</h3>';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    // Format timestamp if available
+    let timestampText = '';
+    if (data.existing_analysis && data.existing_analysis.timestamp) {
+      try {
+        const timestamp = new Date(data.existing_analysis.timestamp);
+        timestampText = ` (from ${timestamp.toLocaleDateString()})`;
+      } catch (e) {
+        console.error('Error formatting timestamp:', e);
+      }
+    }
+    
+    // Prepare the modal content - include summary only if available
+    let modalHtml = `<p>We found an existing analysis for this product${timestampText}.</p>`;
+    
+    // Only add the summary line if a non-empty summary exists
+    if (data.existing_analysis && data.existing_analysis.summary && 
+        data.existing_analysis.summary !== 'No summary available' && 
+        data.existing_analysis.summary.trim() !== '') {
+      modalHtml += `<p>Summary: ${data.existing_analysis.summary}</p>`;
+    }
+    
+    modalHtml += `<p>Would you like to use the existing analysis or perform a new one?</p>`;
+    
+    modalContent.innerHTML = modalHtml;
+    
+    const modalFooter = document.createElement('div');
+    modalFooter.className = 'modal-footer';
+    
+    const useExistingBtn = document.createElement('button');
+    useExistingBtn.className = 'btn btn-primary';
+    useExistingBtn.textContent = 'Use Existing';
+    
+    const newAnalysisBtn = document.createElement('button');
+    newAnalysisBtn.className = 'btn btn-secondary';
+    newAnalysisBtn.textContent = 'New Analysis';
+    
+    // Add buttons to footer
+    modalFooter.appendChild(useExistingBtn);
+    modalFooter.appendChild(newAnalysisBtn);
+    
+    // Build modal structure
+    modalContainer.appendChild(modalHeader);
+    modalContainer.appendChild(modalContent);
+    modalContainer.appendChild(modalFooter);
+    modalOverlay.appendChild(modalContainer);
+    
+    // Add modal to the popup
+    document.body.appendChild(modalOverlay);
+    
+    // Handle button clicks
+    useExistingBtn.addEventListener('click', async () => {
+      // Remove the modal
+      document.body.removeChild(modalOverlay);
+      
+      // Show loading
+      showLoading();
+      
+      try {
+        // Call the memory choice API endpoint
+        // Make sure the API URL doesn't already include the endpoint
+        const baseUrl = window.apiUrl.endsWith('/api/handle-memory-choice') ? 
+          window.apiUrl.replace('/api/handle-memory-choice', '') : 
+          window.apiUrl;
+        
+        const memoryApiUrl = `${baseUrl}/api/handle-memory-choice`;
+        console.log('Sending memory choice to API:', memoryApiUrl);
+        
+        // Prepare the request payload
+        const requestData = {
+          choice: 'use_existing',
+          product_id: data.existing_analysis.product_id
+        };
+        
+        console.log('Sending use_existing request with data:', requestData);
+        
+        const response = await fetch(memoryApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(requestData)
+        });
+        
+        // Log full response details
+        console.log('Response status:', response.status, response.statusText);
+        const responseText = await response.text();
+        
+        try {
+          // Try to parse as JSON
+          const responseData = JSON.parse(responseText);
+          console.log('Response data:', responseData);
+          
+          if (!response.ok) {
+            console.error(`Memory API error: ${response.status} ${response.statusText}`, responseData);
+            
+            // If there's a specific error message in the response, show it
+            if (responseData && responseData.error) {
+              throw new Error(responseData.error);
+            } else {
+              throw new Error(`Server returned ${response.status} ${response.statusText}`);
+            }
+          }
+          
+          // Process and display the result
+          chrome.runtime.sendMessage(
+            { action: 'processApiResults', data: responseData },
+            (processedResponse) => {
+              if (processedResponse && processedResponse.status === 'success') {
+                displayResults(processedResponse.processedData, productData.title);
+                statusMessage.textContent = 'Retrieved analysis from memory!';
+                statusMessage.className = 'status-success';
+              } else {
+                showError('Error processing API results');
+              }
+            }
+          );
+        } catch (jsonError) {
+          // Handle non-JSON responses
+          console.error('Failed to parse response as JSON:', jsonError);
+          console.log('Raw response:', responseText);
+          
+          if (!response.ok) {
+            throw new Error(`Server returned ${response.status} ${response.statusText} - Not a valid JSON response`);
+          }
+          
+          showError('Server returned an invalid response format');
+        }
+      } catch (error) {
+        console.error('Memory choice API error:', error);
+        if (error.message.includes('Failed to fetch')) {
+          showError(`Server connection error: Please ensure the API server is running at ${window.apiUrl}`);
+        } else {
+          showError(`Server error: ${error.message}`);
+        }
+      } finally {
+        loader.classList.add('hidden');
+        analyzeButton.disabled = false;
+      }
+    });
+    
+    newAnalysisBtn.addEventListener('click', async () => {
+      // Remove the modal
+      document.body.removeChild(modalOverlay);
+      
+      // Show loading
+      showLoading();
+      
+      try {
+        // Call the memory choice API endpoint
+        // Make sure the API URL doesn't already include the endpoint
+        const baseUrl = window.apiUrl.endsWith('/api/handle-memory-choice') ? 
+          window.apiUrl.replace('/api/handle-memory-choice', '') : 
+          window.apiUrl;
+        
+        const memoryApiUrl = `${baseUrl}/api/handle-memory-choice`;
+        console.log('Sending memory choice to API:', memoryApiUrl);
+        
+        // Ensure productData has the required fields
+        const cleanProductData = {
+          title: productData.title || '',
+          site: productData.site || 'amazon.com',
+          url: productData.url || window.location.href,
+          price: productData.price || '',
+          reviews: Array.isArray(productData.reviews) ? productData.reviews : [],
+          force_new_analysis: true
+        };
+        
+        // Add user preferences if available
+        if (userPreferences) {
+          cleanProductData.user_preferences = userPreferences;
+        }
+        
+        console.log('Sending new analysis request with data:', cleanProductData);
+        
+        const response = await fetch(memoryApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            choice: 'new_analysis',
+            product_data: cleanProductData
+          })
+        });
+        
+        // Log full response details
+        console.log('Response status:', response.status, response.statusText);
+        const responseText = await response.text();
+        
+        try {
+          // Try to parse as JSON
+          const responseData = JSON.parse(responseText);
+          console.log('Response data:', responseData);
+          
+          if (!response.ok) {
+            console.error(`Memory API error: ${response.status} ${response.statusText}`, responseData);
+            
+            // If there's a specific error message in the response, show it
+            if (responseData && responseData.error) {
+              throw new Error(responseData.error);
+            } else {
+              throw new Error(`Server returned ${response.status} ${response.statusText}`);
+            }
+          }
+          
+          // Process and display the result
+          chrome.runtime.sendMessage(
+            { action: 'processApiResults', data: responseData },
+            (processedResponse) => {
+              if (processedResponse && processedResponse.status === 'success') {
+                displayResults(processedResponse.processedData, productData.title);
+                statusMessage.textContent = 'Analysis complete!';
+                statusMessage.className = 'status-success';
+              } else {
+                showError('Error processing API results');
+              }
+            }
+          );
+        } catch (jsonError) {
+          // Handle non-JSON responses
+          console.error('Failed to parse response as JSON:', jsonError);
+          console.log('Raw response:', responseText);
+          
+          if (!response.ok) {
+            throw new Error(`Server returned ${response.status} ${response.statusText} - Not a valid JSON response`);
+          }
+          
+          showError('Server returned an invalid response format');
+        }
+      } catch (error) {
+        console.error('Memory choice API error:', error);
+        if (error.message.includes('Failed to fetch')) {
+          showError(`Server connection error: Please ensure the API server is running at ${window.apiUrl}`);
+        } else {
+          showError(`Server error: ${error.message}`);
+        }
+      } finally {
+        loader.classList.add('hidden');
+        analyzeButton.disabled = false;
+      }
     });
   }
   
   /**
    * Send product data to the API server for analysis
-   * @param {Object} productData - Product data scraped from the Amazon page
+   * @param {Object} productData - Product data object to analyze
    */
   function sendToApiServer(productData) {
-    console.log("Sending data to API:", productData);
+    // Make sure the API URL doesn't already include the endpoint
+    const baseUrl = window.apiUrl.endsWith('/api/detect-product') ? 
+      window.apiUrl.replace('/api/detect-product', '') : 
+      window.apiUrl;
+      
+    const apiUrl = `${baseUrl}/api/detect-product`;
+    console.log('Sending to API:', productData);
+    console.log('API URL:', apiUrl);
+    
+    // Show loading indicator
+    showLoading();
     
     // Make sure we have the title and site for the API
     if (!productData.title || productData.title.trim() === '') {
@@ -390,6 +753,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Always request full details to avoid hidden pros/cons
     productData.include_full_details = true;
     
+    console.log('Attempting to connect to API at:', apiUrl);
+
     fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -400,11 +765,21 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(response => {
       if (!response.ok) {
+        console.error(`Server response not OK: ${response.status} ${response.statusText}`);
         throw new Error(`Server returned ${response.status} ${response.statusText}`);
       }
       return response.json();
     })
     .then(data => {
+      // Check if this is a memory match response
+      if (data.status === 'memory_match_found') {
+        // Handle memory match
+        loader.classList.add('hidden');
+        analyzeButton.disabled = false;
+        handleMemoryMatch(data, productData);
+        return;
+      }
+      
       // Process data through background script (to handle hidden fields)
       chrome.runtime.sendMessage(
         { action: 'processApiResults', data: data },
@@ -428,8 +803,14 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     })
     .catch(error => {
-      console.error('API error:', error);
-      showError(`Server error: ${error.message}`);
+      console.error('API error details:', error);
+      
+      // Check if it's a network error
+      if (error.message.includes('Failed to fetch')) {
+        showError(`Server connection error: Please ensure the API server is running at ${window.apiUrl}`);
+      } else {
+        showError(`Server error: ${error.message}`);
+      }
     })
     .finally(() => {
       loader.classList.add('hidden');
@@ -635,6 +1016,47 @@ document.addEventListener('DOMContentLoaded', () => {
     if (score >= 0.3) return '#27ae60';  // Green for positive
     if (score <= -0.3) return '#e74c3c'; // Red for negative
     return '#f39c12'; // Orange for neutral
+  }
+  
+  /**
+   * Show dialog to change server URL
+   */
+  function changeServerUrl() {
+    const currentUrl = window.apiUrl;
+    
+    const newUrl = prompt('Enter server URL (e.g., http://localhost:8080)', currentUrl);
+    
+    if (newUrl && newUrl !== currentUrl) {
+      // Sanitize the URL to remove any API endpoints
+      let sanitizedUrl = newUrl;
+      
+      // Remove common API endpoints if they exist in the URL
+      if (sanitizedUrl.includes('/api/')) {
+        sanitizedUrl = sanitizedUrl.substring(0, sanitizedUrl.indexOf('/api/'));
+      }
+      
+      // Remove trailing slash if present
+      if (sanitizedUrl.endsWith('/')) {
+        sanitizedUrl = sanitizedUrl.slice(0, -1);
+      }
+      
+      // Store the sanitized URL
+      chrome.storage.local.set({ serverUrl: sanitizedUrl }, () => {
+        window.apiUrl = sanitizedUrl;
+        console.log('Server URL updated to:', sanitizedUrl);
+        
+        // Update the display
+        const display = document.getElementById('server-url-display');
+        if (display) {
+          display.innerHTML = `<small>Server: ${sanitizedUrl} <button id="change-server-btn" class="small-btn">Change</button></small>`;
+          document.getElementById('change-server-btn').addEventListener('click', changeServerUrl);
+        }
+        
+        // Show success message
+        statusMessage.textContent = 'Server URL updated. Please try your request again.';
+        statusMessage.className = 'status-info';
+      });
+    }
   }
   
   // Initialize the extension

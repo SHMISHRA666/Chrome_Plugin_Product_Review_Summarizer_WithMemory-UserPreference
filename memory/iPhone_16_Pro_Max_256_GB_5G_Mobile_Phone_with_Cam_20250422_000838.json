@@ -1,0 +1,70 @@
+{
+  "product_data": {
+    "title": "iPhone 16 Pro Max 256 GB: 5G Mobile Phone with Camera Control, 4K 120 fps Dolby Vision and a Huge Leap in Battery Life. Works with AirPods; Natural Titanium",
+    "site": "amazon.in",
+    "url": "https://www.amazon.in/iPhone-16-Pro-Max-256/dp/B0DGHYPFYB/ref=sr_1_2_sspa?crid=OFI72CYXC057&dib=eyJ2IjoiMSJ9.G4hbo6TCrMKJJtW5uWW7N-ayXOO9KtCvkFxPRq2wjB6UDJd6x92MGt5oUhVvUOey-5SQCYI6UtXuj7kUwQMGu0DF9nijO6Wm3VYdc0DQqdgj4H-HFa0WgMGojHxUu-scwZ-NG_1DRnH7boIDGx9dZz2ATYgiHd3GUrqQuJFj5KorlFTEJg9fZFnUW3fxXSNeb9Bjecpy9mMmaYufaGyPrI88I72F7PeC09vwbvMnYYg.txCLcEptlDxvetp2lHQJJrc-i0e0RgNUK_goY1BzWkQ&dib_tag=se&keywords=iphone%2B16%2Bpro%2B256gb&qid=1745221369&sprefix=iphone%2B16%2B%2Caps%2C258&sr=8-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1",
+    "price": "\u20b91,35,900.00",
+    "reviews": [
+      "I've been using the iPhone 16 Pro Max for over a month, and I'm blown away by its sheer performance, stunning display, and revolutionary camera capabilities. Apple has truly outdone themselves with this flagship device.*Pros:*1. *Breathtaking Display*: The 6.9-inch Super Retina XDR display is mesmerizing, with vibrant colors and an immersive viewing experience.2. *Camera Revolution*: The 48MP Pro camera system is incredible, capturing life-like images with ease. Night mode portraits and advanced features take mobile photography to new heights.3. *Lightning-Fast Performance*: The A18 Pro chip delivers seamless multitasking, graphics-intensive gaming, and effortless navigation.4. *All-Day Battery Life*: With up to 33 hours of video playback, I no longer worry about running out of juice.5. *Sleek Design*: The titanium build and textured matte glass back exude premium quality and durability.*Additional Highlights:*- Dynamic Island and Always-On display provide an intuitive experience- ProMotion technology with adaptive refresh rates up to 120Hz ensures silky-smooth visuals- Fast charging and wireless charging (MagSafe and Qi) make powering up convenient- IP68 rating ensures peace of mind against accidental water exposure*Verdict:*The iPhone 16 Pro Max is an exceptional device that justifies its premium price. If you're seeking the best iPhone experience, look no further. Apple's attention to detail, innovative features, and commitment to quality make this device a game-changer.*Rating Breakdown:*- Display: 5/5- Camera: 5/5- Performance: 5/5- Battery Life: 5/5- Design: 5/5- Value: 4.5/5*Recommendation:*If you're due for an upgrade or seeking the ultimate smartphone experience, the iPhone 16 Pro Max is the perfect choice.",
+      "The media could not be loaded.",
+      "I love the iPhone 16 Pro Max. It's big, powerful, and up for anything. Yes, I play a console-level game on it without any issue. It takes lovely photos that, even if you choose not to try out the new styles and undertones, are clear and color-accurate.Key SpecsApple iPhone 16 Pro MaxRAM 8 GBProcessor Apple A18 ProRear Camera 48 MP + 48 MP + 12 MPFront Camera 12 MPBattery 4685 mAhDisplay 6.9 inches (17.53 cm)Pros:*Larger screens/thinner bezels*4K slo-mo, OMG*Powerful processor*Camera control for instant camera access*Good performance & battery life*Excellent cameras & useful Photo Styles*Video capabilities & Audio Mix*Apple IntelligenceCons:*No 8K video recording*Slow charging*Pricey",
+      "iOS has lost the polish and stability it used to carry beforeoverall still a great phone",
+      "Defective product sold by the seller. Network, activation and restart issue within 7 days. Apple and amazon neither took responsibility and diverted me towards service centre where they took my phone in for 10 working days. Never buy apple products from Amazon.",
+      "Excellent phone, Apple Intelligence is amazing, the battery life is mind blowing and comes with the best camera. If you have a 13 Pro Max or older, go for it. If you have a 14 Pro Max, the only difference you are going to see is Apple Intelligence, better battery life and slightly better cameras. Otherwise it's going to feel like the exact same phone if you use it without a case as the rounded eges in 16 Pro Max are better to use without cases. Skip and save money if you have the 15 Pro Max because the difference is negligible. The black titanium color looks gorgeous and the only good color in the current series. It's a shame they removed the Blue Titanium color. Also costs 15-20k less than the launch price of 15 Pro Max so that is a huge plus.",
+      "I did not like it at first. Its my first iPhone. I have used Samsung, Oneplus and Xiaomi phones. 16 Pro Max has many flaws. Android is much better now. But iOS is very smooth.Things I liked:1. Speakers are amazing.2. Battery life is good.3. Overall smoothness.4. Camera is great.Things I did not like:1. All the Web Browsers (Safari or others) are limited to 60hz.2. No option for menu bar navigation (android has both gestures and bar).3. Display / Screen color is fixed at Natural tone (no option for Vivid etc).4. Restricted files/folder access and many other UI limitations.5. Managing Whatsapp media is a mess (its much simpler on android).6. Telephoto 5X images are too soft.7. No separate Camera folder in Photos app for the photos you take with your phone.",
+      "The GoodUnbeatable video and audio recording featuresPerformance levels that you'll never max outApple's best display yetThe Not So GoodApple Intelligence is sub-parNot much difference from the iPhone 15 Pro MaxA bit too expensive"
+    ],
+    "force_new_analysis": true,
+    "user_preferences": {
+      "avoid_features": [
+        "Color Mismatch"
+      ],
+      "brand_preferences": [],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Quality"
+      ],
+      "price_range": {
+        "max": 300,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.5
+    }
+  },
+  "analysis_results": {
+    "title": "iPhone 16 Pro Max 256 GB: 5G Mobile Phone with Camera Control, 4K 120 fps Dolby Vision and a Huge Leap in Battery Life. Works with AirPods; Natural Titanium",
+    "overall_sentiment": "Neutral",
+    "sentiment_score": 0.26,
+    "confidence_score": 67.0,
+    "confidence_level": "High Confidence: Reviews indicate this is likely a good product",
+    "pros": [
+      "If you have a 14 Pro Max, the only difference you are going to see is Apple Intelligence, better battery life and slightly better cameras.",
+      "If you're seeking the best iPhone experience, look no further.",
+      "*Camera Revolution*: The 48MP Pro camera system is incredible, capturing life-like images with ease.",
+      "*Breathtaking Display*: The 6.9-inch Super Retina XDR display is mesmerizing, with vibrant colors and an immersive viewing experience.2.",
+      "Excellent phone, Apple Intelligence is amazing, the battery life is mind blowing and comes with the best camera."
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 67% calculated based on:\n\u2022 31.5 points from sentiment score (0.26)\n\u2022 27.5 points from review count (8 reviews)\n\u2022 8.0 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 31.5,
+      "review_count_component": 27.5,
+      "specificity_component": 8.0,
+      "balance_component": 0.0
+    },
+    "review_count": 8,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (8 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product does not fully match user preferences due to the price being significantly higher than the maximum preferred price. The product meets the 'Good Quality' feature priority. There are no brand preferences specified. No Color Mismatch has been found. The product review count and sentiment score do not meet the minimum thresholds. The confidence score doesn't meet the minimum threshold.",
+    "preference_match_score": 10
+  },
+  "timestamp": "2025-04-22T00:08:38.499727",
+  "product_id": "iPhone 16 Pro Max 256 GB: 5G Mobile Phone with Cam..._20250422_000838"
+}
