@@ -87,3 +87,12 @@ python Product_Review_Summariser_main.py
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Limitations
+1. This is not the best version of the tool
+2. Currently only works with Amazon product pages
+3. Limited to processing reviews visible on the current page
+4. Navigation to the review page can retrieve more reviews, but not all at once
+5. Web scraping functionality could be improved and optimized
+6. Review analysis is limited by the quality and quantity of available reviews
+7. The system currently stores memory data per product rather than per user.

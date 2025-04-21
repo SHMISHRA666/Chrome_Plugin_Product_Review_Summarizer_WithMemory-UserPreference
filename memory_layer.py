@@ -42,7 +42,18 @@ class MemoryLayer:
         Returns:
             String containing the filename
         """
-        return os.path.join(self.storage_dir, f"{product_id}.json")
+        # Sanitize the product_id to create a valid filename
+        # Replace invalid characters and truncate if too long
+        sanitized_id = "".join(c for c in product_id if c.isalnum() or c in [' ', '_', '-'])
+        sanitized_id = sanitized_id.replace(' ', '_')
+        
+        # Truncate if too long (Windows has a 260 character path limit)
+        if len(sanitized_id) > 150:
+            # Keep the first 100 chars and the timestamp part (which should be at the end)
+            timestamp_part = sanitized_id[-20:] if len(sanitized_id) >= 20 else ""
+            sanitized_id = sanitized_id[:100] + "_" + timestamp_part
+            
+        return os.path.join(self.storage_dir, f"{sanitized_id}.json")
         
     def store_product_analysis(self, product_data, analysis_results, user_preferences=None):
         """
@@ -54,8 +65,16 @@ class MemoryLayer:
             user_preferences: Optional user preferences used for analysis
         """
         try:
+            # Ensure storage directory exists
+            self.ensure_storage_dir()
+            
             # Create a unique product ID from title and timestamp
-            product_id = f"{product_data['title']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            # Use a shorter version of the title to avoid filename issues
+            title = product_data['title']
+            short_title = title[:50] + "..." if len(title) > 50 else title
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            product_id = f"{short_title}_{timestamp}"
+            
             filename = self._get_product_filename(product_id)
             
             # Combine product data and analysis results
