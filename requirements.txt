@@ -9,6 +9,9 @@ google-generativeai
 mcp-server
 mcp-client
 python-dotenv
+pydantic
 requests
 rich
 textblob
+sentence-transformers
+scipy
