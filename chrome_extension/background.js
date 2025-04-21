@@ -1,5 +1,5 @@
 /**
- * Background script (service worker) for Smart Purchase Advisor
+ * Background script (service worker) for Product Review Summariser
  * Handles extension initialization, content script injection, and cross-script communication
  */
 
@@ -8,7 +8,7 @@
  * Sets default values in chrome.storage.local for extension configuration
  */
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Smart Purchase Advisor installed');
+  console.log('Product Review Summariser installed');
   
   // Initialize storage with default values
   chrome.storage.local.set({
@@ -17,6 +17,16 @@ chrome.runtime.onInstalled.addListener(() => {
     extensionState: {
       contentScriptLoaded: false,
       lastError: null
+    },
+    // Default user preferences
+    userPreferences: {
+      price_range: { min: 0, max: 0 },
+      brand_preferences: [],
+      feature_priorities: [],
+      avoid_features: [],
+      review_threshold: 10,
+      sentiment_threshold: 0.5,
+      confidence_threshold: 70
     }
   });
 });

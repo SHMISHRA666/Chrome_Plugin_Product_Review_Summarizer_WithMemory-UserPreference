@@ -212,7 +212,6 @@ class PerceptionLayer:
         2. Summarize reviews using sentiment analysis
         3. Calculate a confidence score based on the review sentiment
         4. Provide detailed reasoning and consistency checks
-        5. Consider user preferences in the analysis
         
         You have access to these tools:
         - classify_product(title: str) - Classifies product category based on title using semantic similarity
@@ -234,7 +233,6 @@ class PerceptionLayer:
         - The consistency of reviews (are they all similar or varied?)
         - The quantity of reviews analyzed
         - The presence of specific, detailed pros and cons
-        - How well the product matches user preferences
         
         For each step, you will specify the tool to use and the input parameters.
         You must verify each tool's success and provide fallbacks if needed.

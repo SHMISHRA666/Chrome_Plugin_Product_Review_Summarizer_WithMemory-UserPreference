@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Content Security Policy to restrict resource loading and prevent XSS attacks -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src http://localhost:8080; style-src 'self' 'unsafe-inline'">
-  <title>Smart Purchase Advisor</title>
+  <title>Product Review Summariser</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
     <!-- Extension Header -->
     <header>
-      <h1>Smart Purchase Advisor</h1>
+      <h1>Product Review Summariser</h1>
+      <button id="settings-button" class="settings-button">
+        <span class="settings-icon">⚙️</span>
+      </button>
     </header>
     
     <!-- Status Container: Displays messages about extension state -->
@@ -76,6 +79,49 @@
         <h3>Warnings</h3>
         <ul id="warnings-list"></ul>
       </div>
+    </div>
+    
+    <!-- User Preferences Container: Hidden by default -->
+    <div id="preferences-container" class="hidden">
+      <h2>User Preferences</h2>
+      <form id="preferences-form">
+        <div class="form-group">
+          <label for="price-range-min">Minimum Price (Rs)</label>
+          <input type="number" id="price-range-min" min="0" step="1">
+        </div>
+        <div class="form-group">
+          <label for="price-range-max">Maximum Price (Rs)</label>
+          <input type="number" id="price-range-max" min="0" step="1">
+        </div>
+        <div class="form-group">
+          <label for="brand-preferences">Preferred Brands (comma separated)</label>
+          <input type="text" id="brand-preferences" placeholder="e.g., Samsung, Apple, Sony">
+        </div>
+        <div class="form-group">
+          <label for="feature-priorities">Feature Priorities (comma separated)</label>
+          <input type="text" id="feature-priorities" placeholder="e.g., battery life, camera quality">
+        </div>
+        <div class="form-group">
+          <label for="avoid-features">Features to Avoid (comma separated)</label>
+          <input type="text" id="avoid-features" placeholder="e.g., bloatware, poor battery">
+        </div>
+        <div class="form-group">
+          <label for="review-threshold">Minimum Review Count</label>
+          <input type="number" id="review-threshold" min="1" value="10">
+        </div>
+        <div class="form-group">
+          <label for="sentiment-threshold">Minimum Sentiment Score (0-1)</label>
+          <input type="number" id="sentiment-threshold" min="0" max="1" step="0.1" value="0.5">
+        </div>
+        <div class="form-group">
+          <label for="confidence-threshold">Minimum Confidence Score (0-100)</label>
+          <input type="number" id="confidence-threshold" min="0" max="100" step="1" value="70">
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="save-preferences">Save Preferences</button>
+          <button type="button" id="cancel-preferences">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
   <!-- Main popup script for handling user interaction and API communication -->

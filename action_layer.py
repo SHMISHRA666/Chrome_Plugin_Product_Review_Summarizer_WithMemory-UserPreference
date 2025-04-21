@@ -63,7 +63,7 @@ class ActionLayer:
                 log_data["reviews"] = f"[{review_count} reviews - content hidden]"
             
             logger.info(f"Received product detection: {log_data}")
-            
+            # logger.info(f"Session: {self.session}")
             # Validate required fields
             if "title" not in data:
                 logger.error("Missing required field: title")
@@ -79,11 +79,25 @@ class ActionLayer:
             # Set product info in decision layer and action layer
             self.decision_layer.set_product_info(data)
             self.set_product_info(data)
+
+            # Extract user preferences if present
+            user_preferences = None
+            if "user_preferences" in data:
+                user_preferences = data.get("user_preferences")
+                logger.info(f"User preferences received: {user_preferences}")
             
+            user_preferences = await self.perception_layer.process_user_preferences(user_preferences)
+
             # 1. Process product through perception layer
             category = await self.perception_layer.classify_product(data["title"])
             self.decision_layer.set_category(category)  # Set the category in decision layer
-            prompt = await self.perception_layer.craft_initial_prompt(data, category)
+            
+            # Pass user preferences to craft_initial_prompt
+            prompt = await self.perception_layer.craft_initial_prompt(
+                data, 
+                category,
+                user_preferences=user_preferences
+            )
             tool_plan = await self.perception_layer.get_tool_invocation_plan(prompt)
             print("Received tool plan from LLM:")
             print(f"Plan with {len(tool_plan.get('tool_calls', []))} tool calls: {[t.get('tool_name', t.get('name', 'unknown')) for t in tool_plan.get('tool_calls', [])]}")
@@ -96,8 +110,8 @@ class ActionLayer:
             print(f"Self Check: {self_check}")
 
             # 4. Get final analysis from decision layer
-            final_response = await self.decision_layer.perform_final_reasoning(results, self_check)
-            print(f"Final Response: {final_response}")
+            final_response = await self.decision_layer.perform_final_reasoning(results, self_check, user_preferences)
+            # print(f"Final Response: {final_response}")
             
             # 5. Store analysis in memory layer
             self.memory_layer.store_product_analysis(data, final_response)
@@ -119,11 +133,22 @@ class ActionLayer:
             if "reviews" in log_response:
                 log_response["reviews"] = f"[{len(log_response['reviews'])} reviews - content hidden]"
             logger.info(f"Sending response: {log_response}")
+        
             
-            return web.json_response(final_response)
+            # Evaluate preference match
+            preference_match = await self.decision_layer.evaluate_preference_match(
+                analysis_results=final_response,
+                user_preferences=user_preferences
+            )
+            
+            # Include preference match in final results
+            final_results = {**final_response, **preference_match}
+            
+            # Return the results
+            return web.json_response(final_results)
             
         except Exception as e:
-            logger.error(f"Error handling product detection: {e}", exc_info=True)
+            logger.error(f"Error processing product detection: {e}")
             return web.json_response({"error": str(e)}, status=500)
 
     async def execute_tool_plan(self, tool_plan):
@@ -140,7 +165,7 @@ class ActionLayer:
             return {"error": tool_plan["error"]}
         
         results = {}
-        
+        logger.info(f"Product Info: {self.product_info}")
         try:
             if "tool_calls" in tool_plan:
                 for tool_call in tool_plan["tool_calls"]:
@@ -171,7 +196,7 @@ class ActionLayer:
                     logger.info(f"Executing tool: {tool_name}")
                     
                     # Format the arguments with the required 'input' field
-                    formatted_args = {"input": tool_input}
+                    # formatted_args = {"input": tool_input}
                     
                     # 1. Classify Product
                     if tool_name in ["classify_product"]:

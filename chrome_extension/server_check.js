@@ -1,5 +1,5 @@
 /**
- * Server Connection Test Script for Smart Purchase Advisor
+ * Server Connection Test Script for Product Review Summariser
  * 
  * This script tests if the Python backend API server is running and accessible.
  * It sends a test request to the server and displays the result to the user,

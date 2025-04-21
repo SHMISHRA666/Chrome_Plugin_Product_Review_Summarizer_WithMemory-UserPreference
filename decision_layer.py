@@ -77,14 +77,144 @@ class DecisionLayer:
         except Exception as e:
             logger.error(f"Error in LLM request: {e}")
             return None
+        
+    async def evaluate_preference_match(self, analysis_results, user_preferences):
+        """
+        Evaluate how well the product matches user preferences
+        
+        Args:
+            analysis_results: Results from the sentiment analysis
+            user_preferences: User preferences dictionary
+            
+        Returns:
+            Dictionary with preference match details and score
+        """
+        if not user_preferences:
+            return {"preference_match_score": None, "preference_matches": {}, "preference_mismatches": {}}
+        
+        matches = {}
+        mismatches = {}
+        total_score = 0
+        total_factors = 0
+        
+        # Check price match
+        if "price" in analysis_results and user_preferences.get("price_range"):
+            price_str = analysis_results["price"]
+            try:
+                # Extract numeric price (assuming format like "$1,234.56" or "₹1,234.56")
+                numeric_price = float(''.join(filter(lambda x: x.isdigit() or x == '.', price_str)))
+                min_price = user_preferences["price_range"].get("min", 0)
+                max_price = user_preferences["price_range"].get("max", float('inf'))
+                
+                total_factors += 1
+                if min_price <= numeric_price <= max_price:
+                    matches["price"] = f"Price {price_str} is within range (Rs {min_price} to Rs {max_price})"
+                    total_score += 100
+                else:
+                    mismatches["price"] = f"Price {price_str} is outside range (Rs {min_price} to Rs {max_price})"
+            except:
+                # If price parsing fails, don't factor it in
+                pass
+        
+        # Check brand preference match
+        if "brand" in analysis_results and user_preferences.get("brand_preferences"):
+            brand = analysis_results["brand"].lower()
+            preferred_brands = [b.lower() for b in user_preferences["brand_preferences"]]
+            
+            total_factors += 1
+            if any(preferred in brand for preferred in preferred_brands):
+                matches["brand"] = f"Brand {analysis_results['brand']} matches preferences"
+                total_score += 100
+            else:
+                mismatches["brand"] = f"Brand {analysis_results['brand']} is not in preferred brands list"
+        
+        # Check feature priorities
+        if "pros" in analysis_results and user_preferences.get("feature_priorities"):
+            priorities = user_preferences["feature_priorities"]
+            pros_text = " ".join(analysis_results["pros"]).lower()
+            
+            priority_matches = []
+            for priority in priorities:
+                if priority.lower() in pros_text:
+                    priority_matches.append(priority)
+            
+            total_factors += 1
+            if priority_matches:
+                matches["features"] = f"Product has {len(priority_matches)}/{len(priorities)} prioritized features"
+                total_score += 100 * (len(priority_matches) / len(priorities))
+            else:
+                mismatches["features"] = "Product doesn't have any of the prioritized features"
+        
+        # Check avoid features
+        if "cons" in analysis_results and user_preferences.get("avoid_features"):
+            avoid_features = user_preferences["avoid_features"]
+            cons_text = " ".join(analysis_results["cons"]).lower()
+            
+            avoid_matches = []
+            for feature in avoid_features:
+                if feature.lower() in cons_text:
+                    avoid_matches.append(feature)
+            
+            total_factors += 1
+            if avoid_matches:
+                mismatches["avoid_features"] = f"Product has {len(avoid_matches)} features to avoid: {', '.join(avoid_matches)}"
+            else:
+                matches["avoid_features"] = "Product doesn't have any features to avoid"
+                total_score += 100
+        
+        # Check review threshold
+        if "review_count" in analysis_results and "review_threshold" in user_preferences:
+            review_count = analysis_results["review_count"]
+            threshold = user_preferences["review_threshold"]
+            
+            total_factors += 1
+            if review_count >= threshold:
+                matches["review_count"] = f"Review count ({review_count}) meets threshold ({threshold})"
+                total_score += 100
+            else:
+                mismatches["review_count"] = f"Review count ({review_count}) is below threshold ({threshold})"
+        
+        # Check sentiment threshold
+        if "sentiment_score" in analysis_results and "sentiment_threshold" in user_preferences:
+            sentiment = analysis_results["sentiment_score"]
+            threshold = user_preferences["sentiment_threshold"]
+            
+            total_factors += 1
+            if sentiment >= threshold:
+                matches["sentiment"] = f"Sentiment score ({sentiment:.2f}) meets threshold ({threshold})"
+                total_score += 100
+            else:
+                mismatches["sentiment"] = f"Sentiment score ({sentiment:.2f}) is below threshold ({threshold})"
+        
+        # Check confidence threshold
+        if "confidence_score" in analysis_results and "confidence_threshold" in user_preferences:
+            confidence = analysis_results["confidence_score"]
+            threshold = user_preferences["confidence_threshold"]
+            
+            total_factors += 1
+            if confidence >= threshold:
+                matches["confidence"] = f"Confidence score ({confidence:.2f}%) meets threshold ({threshold}%)"
+                total_score += 100
+            else:
+                mismatches["confidence"] = f"Confidence score ({confidence:.2f}%) is below threshold ({threshold}%)"
+        
+        # Calculate final preference match score
+        preference_match_score = int(total_score / total_factors) if total_factors > 0 else None
+        
+        return {
+            "preference_match_score": preference_match_score,
+            "preference_matches": matches,
+            "preference_mismatches": mismatches
+        }
 
-    async def perform_final_reasoning(self, results, self_check):
+    async def perform_final_reasoning(self, results, self_check, user_preferences=None):
         """
         Perform final reasoning with the LLM using tool results
         
         Args:
-            results: Dictionary containing all tool execution results
-            self_check: Dictionary containing reliability assessment
+            results: Analysis results
+            self_check: Self-check results
+            user_preferences: Optional user preferences
             
         Returns:
             Dictionary containing the final structured analysis
@@ -192,8 +322,45 @@ EXAMPLE OUTPUTS FROM TOOLS:
      "consistency_level": "High",
      "insights": ["Sample size is adequate for reliable sentiment analysis"]
    }
+
+7. evaluate_preference_match:
+   Input: {"analysis_results": {"price": "$1,234.56", "brand": "Samsung", \
+    "pros": ["Great camera", "Fast performance", "Beautiful display"], \
+    "cons": ["Battery life could be better", "Expensive"], \
+    "review_count": 10, "sentiment_score": 0.75, "confidence_score": 85}, \
+    "user_preferences": {"price_range": {"min": 1000, "max": 1500}, \
+    "brand_preferences": ["Samsung", "Apple"], \
+    "feature_priorities": ["Great camera", "Fast performance", "Beautiful display"], \
+    "avoid_features": ["Expensive", "Battery life could be better"]}}
+   Output: {
+     "preference_match_score": 80,
+     "preference_matches": {"price": "Price $1,234.56 is within range ($1,000 to $1,500)"},
+     "preference_mismatches": {"brand": "Brand Samsung is not in preferred brands list"}
+   }
 """
 
+        # Default values if user_preferences is None or missing keys
+        default_preferences = {
+            "price_range": {"min": 0, "max": float('inf')},
+            "brand_preferences": [],
+            "feature_priorities": [],
+            "avoid_features": [],
+            "review_threshold": 10,
+            "sentiment_threshold": 0.5,
+            "confidence_threshold": 70
+        }
+        
+        # Use user_preferences if provided, otherwise use defaults
+        preferences = {}
+        if user_preferences:
+            # Merge provided preferences with defaults
+            preferences = default_preferences.copy()
+            for key, value in user_preferences.items():
+                if key in preferences:
+                    preferences[key] = value
+        else:
+            preferences = default_preferences
+        
         # Main prompt for final reasoning
         prompt = f"""
         You are a Product Review Analyzer. You have analyzed the reviews for a product 
@@ -208,6 +375,7 @@ EXAMPLE OUTPUTS FROM TOOLS:
         - calculate(expression: str) - Calculate sentiment metrics or confidence score components
         - verify(expression: str, expected: float) - Verify sentiment metrics or confidence score calculations
         - review_consistency_check(reviews_data: dict) - Check consistency of review sentiments and identify potential biases
+        - evaluate_preference_match(analysis_results: dict, user_preferences: dict) - Evaluate how well the product matches user preferences
         
 {examples}
 
@@ -217,6 +385,8 @@ EXAMPLE OUTPUTS FROM TOOLS:
         3. Confidence score (on a scale of 0-100%) with explanation
         4. Key factors that influenced the confidence score
         5. Confidence level interpretation
+        6. Preference match analysis: detailed analysis of how well the product matches user preferences
+        7. Preference match score (0-100) indicating how well the product matches user preferences
         
         The confidence score considers:
         - Overall sentiment polarity (positive reviews increase confidence)
@@ -244,6 +414,18 @@ EXAMPLE OUTPUTS FROM TOOLS:
         - issues: array of critical issues found during self-check
         - warnings: array of warnings found during self-check
         - insights: array of insights found during self-check
+        - preference_match_analysis: detailed analysis of how well the product matches user preferences
+        - preference_match_score: score from 0-100 indicating how well the product matches user preferences
+
+        IMPORTANT: Use these user preferences to:
+        1. Compare the product's price against the user's price range (Rs {preferences["price_range"]["min"]} to Rs {preferences["price_range"]["max"]})
+        2. Check if the product is from one of the user's preferred brands: {", ".join(preferences["brand_preferences"]) if preferences["brand_preferences"] else "No specific brand preferences"}
+        3. Evaluate if the product has the features the user prioritizes: {", ".join(preferences["feature_priorities"]) if preferences["feature_priorities"] else "No specific feature priorities"}
+        4. Check if the product has features the user wants to avoid: {", ".join(preferences["avoid_features"]) if preferences["avoid_features"] else "No specific features to avoid"}
+        5. Verify the product meets the minimum thresholds for:
+           - Review count (at least {preferences["review_threshold"]} reviews)
+           - Sentiment score (at least {preferences["sentiment_threshold"]})
+           - Confidence score (at least {preferences["confidence_threshold"]}%)
         
         EXAMPLE FINAL OUTPUT:
         {{
@@ -266,10 +448,14 @@ EXAMPLE OUTPUTS FROM TOOLS:
           "reliability_level": "High",
           "issues": [],
           "warnings": ["Limited sample size (10 reviews) may affect confidence"],
-          "insights": ["Good sample size (10 reviews) for analysis"]
+          "insights": ["Good sample size (10 reviews) for analysis"],
+          "preference_match_score": 80,
+          "preference_match_analysis": "Product matches user preferences in terms of price, brand, features, and review count but does not match in terms of features to avoid"
         }}
+        After your analysis, explicitly evaluate how well this product matches the user's preferences.
+        Include a "preference_match_score" from 0-100 in your response.
         
-        TASK: Generate final sentiment analysis and confidence assessment
+        TASK: Generate final sentiment analysis and confidence assessment and also evaluate how well the product matches user preferences
         """
         
         # Add product info and results to prompt without logging full content

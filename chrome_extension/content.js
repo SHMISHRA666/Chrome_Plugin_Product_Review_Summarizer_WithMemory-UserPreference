@@ -1,11 +1,11 @@
 /**
- * Content script for Smart Purchase Advisor
+ * Content script for Product Review Summariser
  * This script runs on Amazon product pages to scrape product data and reviews
  * It communicates with the extension popup via Chrome message passing API
  */
 
 // Send a message to let the extension know the content script is loaded
-console.log('Smart Purchase Advisor content script loaded');
+console.log('Product Review Summariser content script loaded');
 chrome.runtime.sendMessage({ action: 'contentScriptLoaded' });
 
 /**

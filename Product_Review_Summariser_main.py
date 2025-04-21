@@ -139,23 +139,34 @@ async def main():
                     "price": "$1199.99",
                     "url": "https://www.amazon.com/samsung-galaxy-s23-ultra"
                 }
-                
+                user_preferences_example = {
+                    "price_range": {"min": 1000, "max": 1500},
+                    "brand_preferences": ["Samsung", "Apple"],
+                    "feature_priorities": ["Great camera", "Fast performance", "Beautiful display"],
+                    "avoid_features": ["Expensive", "Battery life could be better"],
+                    "review_threshold": 10,
+                    "sentiment_threshold": 0.5,
+                    "confidence_threshold": 70
+                }
                 console.print(Panel(f"Processing product: {example_product['title']}", border_style="green"))
                 
                 # Set product info in decision layer and action layer
                 decision_layer.set_product_info(example_product)
                 action_layer.set_product_info(example_product)
-                
+                user_preferences_example = await perception_layer.process_user_preferences(user_preferences_example)
+
                 # Process the product through all layers
                 category = await perception_layer.classify_product(example_product["title"])
                 decision_layer.set_category(category)  # Set the category in decision layer
-                prompt = await perception_layer.craft_initial_prompt(example_product, category)
+                prompt = await perception_layer.craft_initial_prompt(example_product, category, user_preferences=user_preferences_example)
                 tool_plan = await perception_layer.get_tool_invocation_plan(prompt)
                 
                 results = await action_layer.execute_tool_plan(tool_plan)
                 self_check = await action_layer.check_tool_results(results)
                 
-                final_response = await decision_layer.perform_final_reasoning(results, self_check)
+                final_response = await decision_layer.perform_final_reasoning(results, self_check, user_preferences=user_preferences_example)
+                preference_match = await decision_layer.evaluate_preference_match(final_response, user_preferences_example)
+                final_response["preference_match"] = preference_match
                 memory_layer.store_product_analysis(example_product, final_response)
                 
                 # Display the result
