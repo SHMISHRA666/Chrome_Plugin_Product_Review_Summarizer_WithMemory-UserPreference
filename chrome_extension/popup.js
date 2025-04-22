@@ -352,13 +352,13 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function startAnalysis() {
     showLoading();
-
+    
     // Check if the API URL is loaded
     if (!window.apiUrl) {
       showError('Server URL not loaded yet. Please try again in a moment.');
-      return;
-    }
-
+        return;
+      }
+      
     // First check if the server is running
     checkServerConnection()
       .then(isConnected => {
@@ -377,38 +377,38 @@ document.addEventListener('DOMContentLoaded', () => {
         // Now that we know the content script is loaded, send the scrape request
         return new Promise((resolve, reject) => {
           ensureContentScriptLoaded(tabs[0].id, () => {
-            chrome.tabs.sendMessage(
-              tabs[0].id,
-              { action: 'scrapeProductData' },
-              (response) => {
-                // Handle any communication errors
-                if (chrome.runtime.lastError) {
-                  console.error("Runtime error:", chrome.runtime.lastError);
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          { action: 'scrapeProductData' },
+          (response) => {
+            // Handle any communication errors
+            if (chrome.runtime.lastError) {
+              console.error("Runtime error:", chrome.runtime.lastError);
                   reject(new Error(chrome.runtime.lastError.message));
-                  return;
-                }
-                
-                // Check for valid response
-                if (!response || !response.productData) {
+              return;
+            }
+            
+            // Check for valid response
+            if (!response || !response.productData) {
                   reject(new Error('Failed to retrieve product data'));
-                  return;
-                }
-                
-                // If there's a warning in the response
-                if (response.warning) {
-                  statusMessage.textContent = response.warning;
-                  statusMessage.className = 'status-warning';
-                }
-                
-                // Add user preferences to the product data
-                if (userPreferences) {
-                  response.productData.user_preferences = userPreferences;
-                }
-                
+              return;
+            }
+            
+            // If there's a warning in the response
+            if (response.warning) {
+              statusMessage.textContent = response.warning;
+              statusMessage.className = 'status-warning';
+            }
+            
+            // Add user preferences to the product data
+            if (userPreferences) {
+              response.productData.user_preferences = userPreferences;
+            }
+            
                 resolve(response.productData);
-              }
-            );
-          }, () => {
+          }
+        );
+      }, () => {
             reject(new Error('Could not communicate with the page. Try refreshing the page and try again.'));
           });
         });
@@ -754,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
     productData.include_full_details = true;
     
     console.log('Attempting to connect to API at:', apiUrl);
-
+    
     fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -809,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (error.message.includes('Failed to fetch')) {
         showError(`Server connection error: Please ensure the API server is running at ${window.apiUrl}`);
       } else {
-        showError(`Server error: ${error.message}`);
+      showError(`Server error: ${error.message}`);
       }
     })
     .finally(() => {
