@@ -1,0 +1,67 @@
+{
+  "product_data": {
+    "title": "Hero Xpulse 200 4V (ABS Disc) Bike Matt Nexus Blue White Booking for Ex-Showroom Price",
+    "site": "amazon.in",
+    "price": "\u20b91,47,391.00",
+    "url": "https://www.amazon.in/Hero-Xpulse-Nexus-Booking-Ex-Showroom/dp/B0D9DM29TM/?_encoding=UTF8&pd_rd_w=pp7eX&content-id=amzn1.sym.7315a5a4-ad14-444e-9c4b-3e1cc7e26faa&pf_rd_p=7315a5a4-ad14-444e-9c4b-3e1cc7e26faa&pf_rd_r=RPB3SNGGM9XXZ75D6Q74&pd_rd_wg=wbXeA&pd_rd_r=fecc53ff-3bd6-4447-9e69-eaaeaca5be7b&ref_=pd_hp_d_btf_ls_gwc_pc_en4_&th=1",
+    "reviews": [
+      "The suspension is awesome and the driving experience can be compared with horse riding. Literally, it felt like a horse to me.",
+      "Very good with very good delivery",
+      "Performance is good",
+      "The suspension is awesome and the driving experience can be compared with horse riding. Literally, it felt like a horse to me.",
+      "The bike's front suspension doesn't take hard humps easily. Even commuter bikes do run well on humps. But xpulse makes weird noise (front suspension) whenever It runs through humps.I think hero material quality is very low compared to any brands which are in market.The only thing is it's price is quite okay as a 200cc bike.. pickup is good."
+    ],
+    "include_full_details": true,
+    "asin": "B0D9DM29TM",
+    "extracted_reviews": true,
+    "user_preferences": {
+      "avoid_features": [],
+      "brand_preferences": [
+        "Kawasaki"
+      ],
+      "confidence_threshold": 70,
+      "feature_priorities": [
+        "Good Bike body"
+      ],
+      "price_range": {
+        "max": 300000,
+        "min": 0
+      },
+      "review_threshold": 10,
+      "sentiment_threshold": 0.2
+    }
+  },
+  "analysis_results": {
+    "title": "Hero Xpulse 200 4V (ABS Disc) Bike Matt Nexus Blue White Booking for Ex-Showroom Price",
+    "overall_sentiment": "Positive",
+    "sentiment_score": 0.75,
+    "confidence_score": 70.0,
+    "confidence_level": "High Confidence: Reviews indicate this is likely a good product",
+    "pros": [
+      "Very good with very good delivery",
+      "Performance is good",
+      "The suspension is awesome and the driving experience can be compared with horse riding."
+    ],
+    "cons": [],
+    "confidence_explanation": "Confidence score of 70% calculated based on:\n\u2022 43.8 points from sentiment score (0.75)\n\u2022 22.4 points from review count (5 reviews)\n\u2022 4.0 points from review specificity\n\u2022 0.0 points from pros/cons balance",
+    "confidence_components": {
+      "sentiment_component": 43.8,
+      "review_count_component": 22.4,
+      "specificity_component": 4.0,
+      "balance_component": 0.0
+    },
+    "review_count": 5,
+    "reliability_score": 50.0,
+    "reliability_level": "Low",
+    "issues": [],
+    "warnings": [
+      "Limited sample size (5 reviews) may affect confidence",
+      "No cons identified, which is unusual even for positive products"
+    ],
+    "insights": [],
+    "preference_match_analysis": "The product price (\u20b91,47,391.00) is within the user's specified price range (Rs 0.0 to Rs 300000.0). The product brand (Hero) is not among the user's preferred brands (Kawasaki). The reviews suggest good suspension, potentially aligning with 'Good Bike body', but this is not explicitly confirmed. The product does not have features that the user wants to avoid. The review count (5) is below the user's minimum threshold of 10. While the sentiment score (0.75) exceeds the threshold of 0.2, and the confidence score (70.0) is at the threshold, the low review count impacts the overall preference match.",
+    "preference_match_score": 40
+  },
+  "timestamp": "2025-04-22T21:34:29.505489",
+  "product_id": "Hero Xpulse 200 4V (ABS Disc) Bike Matt Nexus Blue..._20250422_213429"
+}

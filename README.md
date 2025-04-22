@@ -79,6 +79,11 @@ python Product_Review_Summariser_main.py
 
 5. When revisiting previously analyzed products, you'll be given the option to use existing analysis or perform a new one
 
+## Extension Tutorial
+
+For a detailed walkthrough of how to use the Chrome extension, watch this tutorial:
+[Smart Purchase Advisor Tutorial](https://youtu.be/P3C4bgsFVIU)
+
 ### Using User Preferences
 
 1. Click the settings icon in the extension
